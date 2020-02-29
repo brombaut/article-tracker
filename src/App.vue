@@ -1,16 +1,24 @@
 <template>
   <div id="app">
     <MainHeader />
+    <ArticlesContainer />
+
+    <ServerCommunication />
   </div>
 </template>
 
 <script>
 import MainHeader from '@/components/MainHeader.vue';
+import ServerCommunication from '@/components/ServerCommunication.vue';
+import ArticlesContainer from '@/components/ArticlesContainer.vue';
+
 
 export default {
     name: 'App',
     components: {
         MainHeader,
+        ServerCommunication,
+        ArticlesContainer,
     },
 };
 </script>

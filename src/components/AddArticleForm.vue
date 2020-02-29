@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import { bus } from '@/main';
+
 export default {
     name: 'AddArticleForm',
     data() {
@@ -63,8 +65,7 @@ export default {
                 url: this.articleUrl,
                 read: this.articleRead,
             };
-            this.$emit('addArticleFormSubmitted', article);
-            setTimeout(this.resetForm, 5000);
+            bus.$emit('addArticleFormSubmitted', article);
         },
         setIsSubmitting() {
             this.isSubmitting = true;

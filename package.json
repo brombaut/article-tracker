@@ -52,7 +52,7 @@
             "no-plusplus": 0,
             "max-len": [
                 "error",
-                160
+                260
             ],
             "indent": [
                 "error",
