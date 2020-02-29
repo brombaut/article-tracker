@@ -1,20 +1,44 @@
 <template>
-    <form id='add-article-form'>
+    <form id='add-article-form' autocomplete="off">
         <h2>New Article Record</h2>
         <div class='form-element'>
-            <label for="article-title">Title</label>
-            <input type="text" id="article-title" name="article-title">
+            <label for="article-title">Title:</label>
+            <input
+                type="text"
+                id="article-title"
+                name="article-title"
+                v-model="articleTitle">
         </div>
         <div class='form-element'>
-            <label for="article-url">URL</label>
-            <input type="text" id="article-url" name="article-url">
+            <label for="article-url">URL:</label>
+            <input
+                type="text"
+                id="article-url"
+                name="article-url"
+                v-model="articleUrl">
         </div>
         <div class='form-element'>
-            <label for="has-been-read">Read</label>
-            <input type="checkbox" id="has-been-read" name="has-been-read">
+            <div id='add-article-read-container'>
+                <label for="has-been-read">
+                    <input
+                        type="checkbox"
+                        id="has-been-read"
+                        name="has-been-read"
+                        v-model="articleRead">
+                    <span>Read</span>
+                </label>
+            </div>
         </div>
         <div id='add-article-submit-container'>
-            <button>Submit</button>
+            <button
+                id='add-article-submit-button'
+                @click="handleSubmit">
+                <div
+                    class="lds-dual-ring"
+                    v-if="isSubmitting">
+                </div>
+                <span v-else>Submit</span>
+            </button>
         </div>
     </form>
 </template>
@@ -22,6 +46,44 @@
 <script>
 export default {
     name: 'AddArticleForm',
+    data() {
+        return {
+            articleTitle: '',
+            articleUrl: '',
+            articleRead: false,
+            isSubmitting: false,
+        };
+    },
+    methods: {
+        handleSubmit(e) {
+            e.preventDefault();
+            this.setIsSubmitting();
+            const article = {
+                title: this.articleTitle,
+                url: this.articleUrl,
+                read: this.articleRead,
+            };
+            this.$emit('addArticleFormSubmitted', article);
+            setTimeout(this.resetForm, 5000);
+        },
+        setIsSubmitting() {
+            this.isSubmitting = true;
+            document.querySelector('#article-title').disabled = true;
+            document.querySelector('#article-url').disabled = true;
+            document.querySelector('#has-been-read').disabled = true;
+            document.querySelector('#add-article-submit-button').disabled = true;
+        },
+        resetForm() {
+            this.isSubmitting = false;
+            this.articleTitle = '';
+            this.articleUrl = '';
+            this.articleRead = false;
+            document.querySelector('#article-title').disabled = false;
+            document.querySelector('#article-url').disabled = false;
+            document.querySelector('#has-been-read').disabled = false;
+            document.querySelector('#add-article-submit-button').disabled = false;
+        },
+    },
 };
 </script>
 
@@ -53,6 +115,42 @@ export default {
                 border: 2px solid #42b983;
             }
         }
+
+        #add-article-read-container {
+            margin: 4px;
+            background-color: #EFEFEF;
+            border-radius: 4px;
+            border: 1px solid #D0D0D0;
+            transition: 0.3s;
+
+            &:hover {
+                cursor: pointer;
+                background: #a0ffd4;
+            }
+
+            label {
+                &:hover {
+                    cursor: pointer;
+                }
+
+                span {
+                    text-align: center;
+                    padding: 12px 18px;;
+                    display: block;
+                    transition: 0.3s;
+                }
+
+                input {
+                    display: none
+                }
+            }
+
+
+            input:checked + span {
+                background-color: #42b983;
+                color: #fff;
+            }
+        }
     }
 
     #add-article-submit-container {
@@ -64,6 +162,34 @@ export default {
 
             &:hover {
                 cursor: pointer;
+            }
+
+            span {
+                padding: 7px 0;
+            }
+
+            .lds-dual-ring {
+                display: inline-block;
+            }
+
+            .lds-dual-ring:after {
+                content: " ";
+                display: block;
+                width: 20px;
+                height: 20px;
+                margin: 8px;
+                border-radius: 50%;
+                border: 3px solid #fff;
+                border-color: #fff transparent #fff transparent;
+                animation: lds-dual-ring 1.2s linear infinite;
+            }
+            @keyframes lds-dual-ring {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
             }
         }
     }

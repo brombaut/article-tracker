@@ -1,8 +1,7 @@
 <template>
     <div id='add-article-dropdown'>
-        <button class="dropbtn border-left">
-            <!-- TODO: Arrow down icon -->
-            Add Article
+        <button class="dropbtn border-left" disabled>
+            <i class="material-icons" style="font-size:60px">arrow_drop_down</i>Add Article
         </button>
         <div class="dropdown-content">
             <AddArticleForm />
@@ -41,8 +40,13 @@ export default {
         min-width: 200px;
         transition: 0.3s;
 
+        i {
+            transition: 0.4s;
+        }
+
         &:hover {
             background-color: #56c291;
+            cursor: pointer;
         }
     }
 
@@ -67,6 +71,10 @@ export default {
         }
         .dropbtn {
             background-color: #56c291;
+
+            i {
+                transform: rotate(180deg);
+            }
         }
     }
 
