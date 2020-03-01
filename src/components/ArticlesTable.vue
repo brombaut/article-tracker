@@ -4,16 +4,16 @@
             <tr class='column-headers'>
                 <th>
                     <div class='column-headers-primary'>
-                        <div class='column-header-title'>ID</div>
+                        <div class='column-header-title'>Created</div>
                         <div class='column-header-sort-icons'>
                             <i
-                                :class="{'material-icons': true, 'selectedSort': sortString === 'id-ascending' }"
-                                @click="() => setSortType('id', 'ascending')">
+                                :class="{'material-icons': true, 'selectedSort': sortString === 'created-ascending' }"
+                                @click="() => setSortType('created', 'ascending')">
                                 arrow_drop_up
                             </i>
                             <i
-                                :class="{'material-icons': true, 'selectedSort': sortString === 'id-descending' }"
-                                @click="() => setSortType('id', 'descending')">
+                                :class="{'material-icons': true, 'selectedSort': sortString === 'created-descending' }"
+                                @click="() => setSortType('created', 'descending')">
                                 arrow_drop_down
                             </i>
                         </div>
@@ -74,10 +74,10 @@
             <tr class='filter-headers'>
                 <th>
                     <input
-                        id='filter-id'
+                        id='filter-created'
                         type='text'
-                        placeholder="Filter ID..."
-                        v-model="filterId" />
+                        placeholder="Filter Created..."
+                        v-model="filterCreated" />
                 </th>
                 <th>
                     <input
@@ -99,9 +99,9 @@
         <tbody>
             <tr
                 v-for="row in rows"
-                :key="row.id"
+                :key="row.createdAt.seconds"
                 @click="handleRowClick(row)">
-                <td>{{ row.id }}</td>
+                <td>{{ row.createdAt.seconds }}</td>
                 <td><b>{{ row.title }}</b></td>
                 <td>{{ row.url }}</td>
                 <td :class="{'readColumn': true, 'articleRead': row.read, 'articleNotRead': !row.read}">
@@ -124,7 +124,7 @@ export default {
     },
     data() {
         return {
-            filterId: '',
+            filterCreated: '',
             filterTitle: '',
             filterUrl: '',
         };
@@ -143,9 +143,9 @@ export default {
         },
     },
     watch: {
-        filterId(newVal) {
+        filterCreated(newVal) {
             const filterUpdateObject = {
-                type: 'id',
+                type: 'created',
                 value: newVal,
             };
             bus.$emit('filterUpdated', filterUpdateObject);

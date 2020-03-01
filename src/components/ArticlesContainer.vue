@@ -22,12 +22,12 @@ export default {
         return {
             articles: [],
             filters: {
-                id: '',
+                created: '',
                 title: '',
                 url: '',
             },
             sort: {
-                attribute: 'id',
+                attribute: 'created',
                 type: 'descending',
             },
         };
@@ -35,8 +35,8 @@ export default {
     computed: {
         articlesToDisplay() {
             let returnArray = [...this.articles];
-            if (this.filters.id) {
-                returnArray = returnArray.filter(record => record.id.toString().includes(this.filters.id.toString()));
+            if (this.filters.created) {
+                returnArray = returnArray.filter(record => record.createdAt.seconds.toString().includes(this.filters.created.toString()));
             }
             if (this.filters.title) {
                 returnArray = returnArray.filter(record => record.title.toString().toLowerCase().includes(this.filters.title.toString().toLowerCase()));
@@ -45,7 +45,25 @@ export default {
                 returnArray = returnArray.filter(record => record.url.toString().toLowerCase().includes(this.filters.url.toString().toLowerCase()));
             }
             returnArray = returnArray.sort((a, b) => {
+                if (this.sort.attribute === 'created') {
+                    if (this.sort.type === 'ascending') {
+                        if (a.createdAt.seconds >= b.createdAt.seconds) {
+                            return 1;
+                        }
+                        return -1;
+                    }
+                    if (a.createdAt.seconds < b.createdAt.seconds) {
+                        return 1;
+                    }
+                    return -1;
+                }
                 if (this.sort.type === 'ascending') {
+                    if (this.sort.attribute === 'created') {
+                        if (a.createdAt.seconds >= b.createdAt.seconds) {
+                            return 1;
+                        }
+                        return -1;
+                    }
                     if (a[this.sort.attribute] >= b[this.sort.attribute]) {
                         return 1;
                     }

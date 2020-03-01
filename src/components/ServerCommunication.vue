@@ -1,6 +1,12 @@
 <script>
 import { bus } from '@/main';
+// import firebase from 'firebase';
+import { articlesCollection } from '@/utils/firebase';
 
+
+// firebase.auth().onAuthStateChanged(user => {
+//     console.log('Firebase user: ', user);
+// });
 export default {
     name: 'ServerCommunication',
     render() {
@@ -8,32 +14,7 @@ export default {
     },
     data() {
         return {
-            articles: [
-                {
-                    id: 1,
-                    title: 'Using the Local Storage',
-                    url: 'https://dev.to/sarah_chima/using-the-local-storage-fn8?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
-                    read: false,
-                },
-                {
-                    id: 2,
-                    title: 'Saving Data in JavaScript without a Database',
-                    url: 'https://dev.to/healeycodes/saving-data-in-javascript-without-a-database-22n?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
-                    read: true,
-                },
-                {
-                    id: 32,
-                    title: 'If Javascript Is Single Threaded, How Is It Asynchronous?',
-                    url: 'https://dev.to/steelvoltage/if-javascript-is-single-threaded-how-is-it-asynchronous-56gd?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
-                    read: true,
-                },
-                {
-                    id: 45,
-                    title: 'How to Learn - What most schools don’t teach',
-                    url: 'https://dev.to/theghostyced/how-to-learn-what-most-schools-don-t-teach-2p5f?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
-                    read: false,
-                },
-            ],
+            articles: [],
         };
     },
     methods: {
@@ -41,7 +22,20 @@ export default {
             bus.$emit('allArticlesFromServer', this.articles);
         },
         postNewArticleRecord(article) {
-            this.articles.push(article);
+            articlesCollection.add({
+                ...article,
+                createdAt: new Date(),
+                lastClicked: new Date(),
+            }).then((docRef) => {
+                articlesCollection.doc(docRef.id).get().then(newArticle => {
+                    this.articles.push({ ...newArticle.data() });
+                    bus.$emit('allArticlesFromServer', this.articles);
+                });
+                bus.$emit('clearArticleForm');
+            }).catch((error) => {
+                // TODO: Handle failed call
+                console.error('Error adding article: ', error);
+            });
         },
         handleArticleOpened(clickedArticle) {
             this.articles.find(article => article.id === clickedArticle.id).read = true;
@@ -51,6 +45,10 @@ export default {
         bus.$on('addArticleFormSubmitted', this.postNewArticleRecord);
         bus.$on('articleClicked', this.handleArticleOpened);
         this.getAllTrackedArticleRecords();
+        articlesCollection.get().then(response => {
+            this.articles = response.docs.map(doc => doc.data());
+            bus.$emit('allArticlesFromServer', this.articles);
+        });
     },
 };
 </script>

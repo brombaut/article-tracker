@@ -85,6 +85,9 @@ export default {
             document.querySelector('#add-article-submit-button').disabled = false;
         },
     },
+    mounted() {
+        bus.$on('clearArticleForm', this.resetForm);
+    },
 };
 </script>
 
