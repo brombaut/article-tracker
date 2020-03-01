@@ -38,17 +38,28 @@ export default {
             });
         },
         handleArticleOpened(clickedArticle) {
-            this.articles.find(article => article.id === clickedArticle.id).read = true;
+            articlesCollection.where('url', '==', clickedArticle.url).get().then(querySnapshot => {
+                querySnapshot.forEach((doc) => {
+                    doc.ref.update({
+                        read: true,
+                        lastClicked: new Date(),
+                    }).then(() => {
+                        this.loadAllArticleRecordsFromServer();
+                    });
+                });
+            });
+        },
+        loadAllArticleRecordsFromServer() {
+            articlesCollection.get().then(response => {
+                this.articles = response.docs.map(doc => doc.data());
+                bus.$emit('allArticlesFromServer', this.articles);
+            });
         },
     },
     mounted() {
         bus.$on('addArticleFormSubmitted', this.postNewArticleRecord);
         bus.$on('articleClicked', this.handleArticleOpened);
-        this.getAllTrackedArticleRecords();
-        articlesCollection.get().then(response => {
-            this.articles = response.docs.map(doc => doc.data());
-            bus.$emit('allArticlesFromServer', this.articles);
-        });
+        this.loadAllArticleRecordsFromServer();
     },
 };
 </script>
