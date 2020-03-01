@@ -28,7 +28,7 @@ export default {
             },
             sort: {
                 attribute: 'id',
-                type: 'ascending',
+                type: 'descending',
             },
         };
     },

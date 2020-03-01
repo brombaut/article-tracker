@@ -43,9 +43,13 @@ export default {
         postNewArticleRecord(article) {
             this.articles.push(article);
         },
+        handleArticleOpened(clickedArticle) {
+            this.articles.find(article => article.id === clickedArticle.id).read = true;
+        },
     },
     mounted() {
         bus.$on('addArticleFormSubmitted', this.postNewArticleRecord);
+        bus.$on('articleClicked', this.handleArticleOpened);
         this.getAllTrackedArticleRecords();
     },
 };

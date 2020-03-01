@@ -99,7 +99,8 @@
         <tbody>
             <tr
                 v-for="row in rows"
-                :key="row.id">
+                :key="row.id"
+                @click="handleRowClick(row)">
                 <td>{{ row.id }}</td>
                 <td><b>{{ row.title }}</b></td>
                 <td>{{ row.url }}</td>
@@ -135,6 +136,10 @@ export default {
                 type,
             };
             bus.$emit('sortUpdated', updateSortType);
+        },
+        handleRowClick(row) {
+            window.open(row.url, '_blank').focus();
+            bus.$emit('articleClicked', row);
         },
     },
     watch: {
