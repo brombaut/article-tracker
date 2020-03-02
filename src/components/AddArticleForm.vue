@@ -40,11 +40,15 @@
                 <span v-else>Submit</span>
             </button>
         </div>
+        <div v-if="showOnlyBenMessage" id='only-ben-message'>
+            <span>Only Ben can add articles to his reading list</span>
+        </div>
     </form>
 </template>
 
 <script>
 import { bus } from '@/main';
+import alreadyReadArticles from '@/utils/alreadyReadArticles';
 
 export default {
     name: 'AddArticleForm',
@@ -54,11 +58,30 @@ export default {
             articleUrl: '',
             articleRead: false,
             isSubmitting: false,
+            showOnlyBenMessage: true,
         };
     },
     methods: {
         handleSubmit(e) {
             e.preventDefault();
+            let stop = false;
+            const titleInput = document.querySelector('#article-title');
+            const urlInput = document.querySelector('#article-url');
+            if (!this.articleTitle) {
+                stop = true;
+                titleInput.classList.add('red-border');
+            } else {
+                titleInput.classList.remove('red-border');
+            }
+            if (!this.articleUrl) {
+                stop = true;
+                urlInput.classList.add('red-border');
+            } else {
+                urlInput.classList.remove('red-border');
+            }
+            if (stop) {
+                return;
+            }
             this.setIsSubmitting();
             const article = {
                 title: this.articleTitle,
@@ -84,9 +107,23 @@ export default {
             document.querySelector('#has-been-read').disabled = false;
             document.querySelector('#add-article-submit-button').disabled = false;
         },
+        submitRealArticle() {
+            const { articles } = alreadyReadArticles;
+            articles.forEach(article => {
+                bus.$emit('addArticleFormSubmitted', article);
+            });
+        },
+        setShowOnlyBenMessage(val) {
+            this.showOnlyBenMessage = val;
+        },
+        handleNotBenError() {
+            this.setShowOnlyBenMessage(true);
+            setTimeout(() => this.setShowOnlyBenMessage(false), 5000);
+        },
     },
     mounted() {
         bus.$on('clearArticleForm', this.resetForm);
+        bus.$on('notBenError', this.handleNotBenError);
     },
 };
 </script>
@@ -110,7 +147,7 @@ export default {
 
         input[type=text] {
             padding: 6px;
-            border: 2px solid #ccc;
+            border: 2px solid #42b983;
             border-radius: 4px;
             width: calc(100% - 8px);
             font-size: 20px;
@@ -118,6 +155,10 @@ export default {
             &:focus {
                 border: 2px solid #42b983;
             }
+        }
+
+        .red-border {
+            border: 2px solid #b94242 !important;
         }
 
         #add-article-read-container {

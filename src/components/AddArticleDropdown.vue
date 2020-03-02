@@ -1,6 +1,8 @@
 <template>
-    <div id='add-article-dropdown'>
-        <button class="dropbtn border-left" disabled>
+    <div
+        id='add-article-dropdown'
+        :class="{'show-dropdown': showDropdown}">
+        <button class="dropbtn border-left" @click="handleDropwdownClicked()">
             <i class="material-icons" style="font-size:60px">arrow_drop_down</i>Add Article
         </button>
         <div class="dropdown-content">
@@ -16,6 +18,16 @@ export default {
     name: 'AddArticleDropdown',
     components: {
         AddArticleForm,
+    },
+    data() {
+        return {
+            showDropdown: false,
+        };
+    },
+    methods: {
+        handleDropwdownClicked() {
+            this.showDropdown = !this.showDropdown;
+        },
     },
 };
 </script>
@@ -65,7 +77,7 @@ export default {
         z-index: 1;
     }
 
-    &:hover {
+    &.show-dropdown {
         .dropdown-content {
             display: block;
         }
@@ -77,7 +89,6 @@ export default {
             }
         }
     }
-
 }
 
 </style>

@@ -99,7 +99,7 @@
         <tbody>
             <tr
                 v-for="row in rows"
-                :key="row.createdAt.seconds"
+                :key="row.url"
                 @click="handleRowClick(row)">
                 <td>{{ row.createdAt.seconds }}</td>
                 <td><b>{{ row.title }}</b></td>
