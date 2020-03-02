@@ -109,9 +109,11 @@ export default {
         },
         submitRealArticle() {
             const { articles } = alreadyReadArticles;
-            articles.forEach(article => {
-                bus.$emit('addArticleFormSubmitted', article);
-            });
+            for (let i = 0; i < articles.length; i++) {
+                setTimeout(() => {
+                    bus.$emit('addArticleFormSubmitted', articles[i]);
+                }, i * 1000);
+            }
         },
         setShowOnlyBenMessage(val) {
             this.showOnlyBenMessage = val;

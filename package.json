@@ -52,7 +52,7 @@
             "no-use-before-define": 0,
             "no-plusplus": 0,
             "max-len": [
-                "warning",
+                "warn",
                 400
             ],
             "indent": [
