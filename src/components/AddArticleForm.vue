@@ -115,6 +115,14 @@ export default {
                 }, i * 1000);
             }
         },
+        submitNotReadArticles() {
+            const { notReadArticles } = alreadyReadArticles;
+            for (let i = 0; i < notReadArticles.length; i++) {
+                setTimeout(() => {
+                    bus.$emit('addArticleFormSubmitted', notReadArticles[i]);
+                }, i * 1000);
+            }
+        },
         setShowOnlyBenMessage(val) {
             this.showOnlyBenMessage = val;
         },

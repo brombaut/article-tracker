@@ -531,4 +531,141 @@ export default {
             read: true,
         },
     ],
+    notReadArticles: [
+        {
+            title: 'A better way to sell your skills as a developer',
+            url: 'https://dev.to/ccleary00/a-better-way-to-sell-your-skills-as-a-developer-than-just-hire-me-or-mass-applying-3d77?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'How to disagree',
+            url: 'https://dev.to/taillogs/how-to-disagree-3b00?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'My google technical interview cheat sheet',
+            url: 'https://dev.to/elliot/my-google-technical-interview-cheat-sheet-1lbd',
+            read: false,
+        },
+        {
+            title: '4 ways you can level up as a developer',
+            url: 'https://dev.to/skill_pathway/4-ways-you-can-level-up-as-a-developer-17ol',
+            read: false,
+        },
+        {
+            title: 'Top 3 tools for boosting your productivity',
+            url: 'https://dev.to/emmawedekind/top-3-tools-for-boosting-your-productivity-1lh?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: '5 important but overlooked skills you should have as a top developer',
+            url: 'https://dev.to/lampewebdev/5-important-but-overlooked-skills-you-should-have-as-a-top-developer-3nn4?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'Beginner tips for developers with no design background',
+            url: 'https://dev.to/ellen_dev/beginner-tips-for-developers-with-no-design-background-41ph',
+            read: false,
+        },
+        {
+            title: 'How to create a scalable and maintainable front end architecture',
+            url: 'https://dev.to/kevtiq/how-to-create-a-scalable-and-maintainable-front-end-architecture-4f47',
+            read: false,
+        },
+        {
+            title: 'Kubernetes and virtual kubelet in a nutshell',
+            url: 'https://dev.to/adipolak/kubernetes-and-virtual-kubelet-in-a-nutshell-gn4',
+            read: false,
+        },
+        {
+            title: '7 advices after 10 years of development',
+            url: 'https://dev.to/cotcotcoder/7-advices-after-10-years-of-development-5bc0?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: '35 microservices interview questions you most likely cant answer',
+            url: 'https://dev.to/aershov24/35-microservices-interview-questions-you-most-likely-can-t-answer-2eoc?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: '6 ways minmalism can help you write clean code',
+            url: 'https://dev.to/paulasantamaria/6-ways-minimalism-can-help-you-write-clean-code-45kp?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: '5 miraculous tools for devs who want to test',
+            url: 'https://dev.to/razgandeanu/5-miraculous-tools-for-devs-who-want-to-test-2688?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'Stop using package lock or yarn lock',
+            url: 'https://dev.to/gajus/stop-using-package-lock-json-or-yarn-lock-3ddi?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'Writing is thinking - learning to write with confidence',
+            url: 'https://dev.to/stephsmithio/writing-is-thinking-learning-to-write-with-confidence-1ijh',
+            read: false,
+        },
+        {
+            title: 'The 5 pillars of a successful career in software',
+            url: 'https://dev.to/ben/the-five-pillars-of-a-successful-career-in-software-4i8o?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'Improve your algorithms and data structure skills',
+            url: 'https://dev.to/coderbyte/improving-your-algorithms-data-structure-skills-2odo?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'What software technologies will earn you the highest pay',
+            url: 'https://dev.to/educative/what-software-technologies-will-earn-you-the-highest-pay-3fc3?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'A free ebook on greedy algorithms, divide and conquer and dynamic programming',
+            url: 'https://dev.to/brandonskerritt/a-free-ebook-on-greedy-algorithms-divide-conquer-and-dynamic-programming-1712?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'Host portfolio site on github pages and add custom domain',
+            url: 'https://dev.to/nabendu82/host-portfolio-site-on-github-pages-and-add-custom-domain-5d27?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: '5 damn easiest soft skills need to become a 10x software engineer',
+            url: 'https://dev.to/saeeddev/5-damn-easiest-soft-skills-needed-to-become-a-10x-yes-10x-software-engineer-4ll7?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'A google coding interview question',
+            url: 'https://dev.to/coderbyte/a-google-coding-interview-question-4h0f?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'Git cheat sheet advanced',
+            url: 'https://dev.to/maxpou/git-cheat-sheet-advanced-3a17',
+            read: false,
+        },
+        {
+            title: 'How I evaluate you in a code interview',
+            url: 'https://dev.to/mortoray/how-i-evaluate-you-in-a-code-interview-42hh',
+            read: false,
+        },
+        {
+            title: 'How to design and code a personal website',
+            url: 'https://dev.to/ryansmith/how-to-design-and-code-a-personal-website-1e71?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'How to get any job you want - a guide to employability skills',
+            url: 'https://dev.to/brandonskerritt/how-to-get-any-job-you-want-a-guide-to-employability-skills-edition-2-498k?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+        {
+            title: 'How I handle the fear of rejection',
+            url: 'https://dev.to/jacobherrington/how-i-handle-the-fear-of-rejection-1b26?utm_source=digest_mailer&utm_medium=email&utm_campaign=digest_email',
+            read: false,
+        },
+    ],
 };
