@@ -4,6 +4,7 @@
         <h1>BEC Article Tracker</h1>
         <div class="expand"></div>
         <div class="actions-container">
+            <SignInDropdown />
             <AddArticleDropdown />
         </div>
     </header>
@@ -11,11 +12,13 @@
 
 <script>
 import AddArticleDropdown from '@/components/AddArticleDropdown.vue';
+import SignInDropdown from '@/components/SignInDropdown.vue';
 
 export default {
     name: 'MainHeader',
     components: {
         AddArticleDropdown,
+        SignInDropdown,
     },
 };
 </script>

@@ -1,48 +1,71 @@
 <template>
     <div
-        id='add-article-dropdown'
+        id='sign-in-dropdown'
         :class="{'show-dropdown': showDropdown}">
-        <button class="dropbtn border-left" @click="handleDropwdownClicked()">
-            <i class="material-icons" style="font-size:60px">arrow_drop_down</i>Add Article
+        <button
+            v-if="!signedIn"
+            class="dropbtn border-left"
+            @click="handleDropwdownClicked()">
+            <i class="material-icons" style="font-size:60px">arrow_drop_down</i>Sign In
         </button>
-        <div class="dropdown-content">
-            <AddArticleForm />
+        <button
+            v-else
+            class="dropbtn border-left"
+            @click="handleSignOutClicked()">
+            <i class="material-icons" style="font-size:40px">exit_to_app</i>Sign Out
+        </button>
+        <div
+            v-if="!signedIn"
+            class="dropdown-content">
+            <SignInForm />
         </div>
     </div>
 </template>
 
 <script>
 import { bus } from '@/main';
-import AddArticleForm from '@/components/AddArticleForm.vue';
+import SignInForm from '@/components/SignInForm.vue';
 
 export default {
-    name: 'AddArticleDropdown',
+    name: 'SignInDropdown',
     components: {
-        AddArticleForm,
+        SignInForm,
     },
     data() {
         return {
+            signedIn: false,
             showDropdown: false,
         };
     },
     methods: {
         handleDropwdownClicked() {
             this.showDropdown = !this.showDropdown;
-            bus.$emit('addArticleOpened');
+            bus.$emit('signInOpened');
         },
         closeDropdown() {
             this.showDropdown = false;
         },
+        handleSignInSuccess() {
+            this.signedIn = true;
+        },
+        handleSignOutSuccess() {
+            this.signedIn = false;
+        },
+        handleSignOutClicked() {
+            bus.$emit('attemptUserSignOut');
+        },
     },
     mounted() {
-        bus.$on('signInOpened', this.closeDropdown);
+        bus.$on('addArticleOpened', this.closeDropdown);
+        bus.$on('signInSuccess', this.handleSignInSuccess);
+        bus.$on('signOutSuccess', this.handleSignOutSuccess);
     },
 };
 </script>
 
 <style lang='scss'>
-#add-article-dropdown {
-    position: relative;
+#sign-in-dropdown {
+    // position: relative;
     display: inline-block;
     border-left: 1px solid white;
 
@@ -73,8 +96,8 @@ export default {
     .dropdown-content {
         display: none;
         position: absolute;
-        right: 0;
-        width: 800px;
+        right: 0px;
+        width: 400px;
         padding-top: 20px;
         padding-bottom: 60px;
         padding-left: 40px;

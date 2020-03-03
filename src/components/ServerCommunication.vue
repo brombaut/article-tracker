@@ -1,12 +1,16 @@
 <script>
 import { bus } from '@/main';
-// import firebase from 'firebase';
+import firebase from 'firebase';
 import { articlesCollection } from '@/utils/firebase';
 
 
-// firebase.auth().onAuthStateChanged(user => {
-//     console.log('Firebase user: ', user);
-// });
+firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+        bus.$emit('signInSuccess');
+    } else {
+        bus.$emit('signOutSuccess');
+    }
+});
 export default {
     name: 'ServerCommunication',
     render() {
@@ -38,16 +42,25 @@ export default {
             });
         },
         handleArticleOpened(clickedArticle) {
-            articlesCollection.where('url', '==', clickedArticle.url).get().then(querySnapshot => {
-                querySnapshot.forEach((doc) => {
-                    doc.ref.update({
-                        read: true,
-                        lastClicked: new Date(),
-                    }).then(() => {
-                        this.loadAllArticleRecordsFromServer();
+            articlesCollection.where('url', '==', clickedArticle.url).get()
+                .then(querySnapshot => {
+                    if (!firebase.auth().currentUser) {
+                        return;
+                    }
+                    querySnapshot.forEach((doc) => {
+                        doc.ref.update({
+                            read: true,
+                            lastClicked: new Date(),
+                        }).then(() => {
+                            this.loadAllArticleRecordsFromServer();
+                        }).catch((error) => {
+                            console.error('Error updating record. Are you sure you created the record?');
+                        });
                     });
+                })
+                .catch((error) => {
+                    console.error('Could not find record');
                 });
-            });
         },
         loadAllArticleRecordsFromServer() {
             articlesCollection.get().then(response => {
@@ -55,10 +68,31 @@ export default {
                 bus.$emit('allArticlesFromServer', this.articles);
             });
         },
+        handleAttemptUserSignIn(user) {
+            firebase
+                .auth()
+                .signInWithEmailAndPassword(user.email, user.password)
+                .then(data => {
+                    bus.$emit('signInSuccess');
+                })
+                .catch(err => {
+                    bus.$emit('signInError');
+                });
+        },
+        handleAttemptUserSignOut() {
+            firebase
+                .auth()
+                .signOut()
+                .then(() => {
+                    bus.$emit('signOutSuccess');
+                });
+        },
     },
     mounted() {
         bus.$on('addArticleFormSubmitted', this.postNewArticleRecord);
         bus.$on('articleClicked', this.handleArticleOpened);
+        bus.$on('attemptUserSignIn', this.handleAttemptUserSignIn);
+        bus.$on('attemptUserSignOut', this.handleAttemptUserSignOut);
         this.loadAllArticleRecordsFromServer();
     },
 };
