@@ -26,20 +26,22 @@ export default {
             bus.$emit('allArticlesFromServer', this.articles);
         },
         postNewArticleRecord(article) {
-            articlesCollection.add({
+            firebase.firestore().collection('articles').add({
                 ...article,
                 createdAt: new Date(),
                 lastClicked: new Date(),
-            }).then((docRef) => {
-                articlesCollection.doc(docRef.id).get().then(newArticle => {
-                    this.articles.push({ ...newArticle.data() });
-                    bus.$emit('allArticlesFromServer', this.articles);
+            })
+                .then((docRef) => {
+                    articlesCollection.doc(docRef.id).get().then(newArticle => {
+                        this.articles.push({ ...newArticle.data() });
+                        bus.$emit('allArticlesFromServer', this.articles);
+                    });
+                    bus.$emit('clearArticleForm');
+                })
+                .catch((error) => {
+                    console.error('Error adding article: ', error);
+                    bus.$emit('addNewArticleError');
                 });
-                bus.$emit('clearArticleForm');
-            }).catch((error) => {
-                // TODO: Handle failed call
-                console.error('Error adding article: ', error);
-            });
         },
         handleArticleOpened(clickedArticle) {
             articlesCollection.where('url', '==', clickedArticle.url).get()

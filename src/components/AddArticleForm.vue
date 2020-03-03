@@ -58,7 +58,7 @@ export default {
             articleUrl: '',
             articleRead: false,
             isSubmitting: false,
-            showOnlyBenMessage: true,
+            showOnlyBenMessage: false,
         };
     },
     methods: {
@@ -120,12 +120,17 @@ export default {
         },
         handleNotBenError() {
             this.setShowOnlyBenMessage(true);
+            this.isSubmitting = false;
+            document.querySelector('#article-title').disabled = false;
+            document.querySelector('#article-url').disabled = false;
+            document.querySelector('#has-been-read').disabled = false;
+            document.querySelector('#add-article-submit-button').disabled = false;
             setTimeout(() => this.setShowOnlyBenMessage(false), 5000);
         },
     },
     mounted() {
         bus.$on('clearArticleForm', this.resetForm);
-        bus.$on('notBenError', this.handleNotBenError);
+        bus.$on('addNewArticleError', this.handleNotBenError);
     },
 };
 </script>
