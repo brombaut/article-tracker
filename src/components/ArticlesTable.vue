@@ -19,7 +19,7 @@
                         </div>
                     </div>
                 </th>
-                <th>
+                <th class="title-column">
                     <div class='column-headers-primary'>
                         <div class='column-header-title'>Title</div>
                         <div class='column-header-sort-icons'>
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                 </th>
-                <th>
+                <th class="url-column">
                     <div class='column-headers-primary'>
                         <div class='column-header-title'>URL</div>
                         <div class='column-header-sort-icons'>
@@ -101,9 +101,9 @@
                 v-for="row in rows"
                 :key="row.url"
                 @click="handleRowClick(row)">
-                <td>{{ row.createdAt.seconds }}</td>
+                <td>{{ row.createdAt.seconds | formatEpochAsDate}}</td>
                 <td><b>{{ row.title }}</b></td>
-                <td>{{ row.url }}</td>
+                <td class="url-column">{{ row.url }}</td>
                 <td :class="{'readColumn': true, 'articleRead': row.read, 'articleNotRead': !row.read}">
                     <i v-if="row.read" class="material-icons" style="font-size:24px">check_box</i>
                     <i v-else class="material-icons" style="font-size:24px">check_box_outline_blank</i>
@@ -128,6 +128,17 @@ export default {
             filterTitle: '',
             filterUrl: '',
         };
+    },
+    filters: {
+        formatEpochAsDate(epoch) {
+            if (!epoch) {
+                return '';
+            }
+            const date = new Date(0);
+            date.setUTCSeconds(epoch);
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        },
     },
     methods: {
         setSortType(attribute, type) {
@@ -224,7 +235,7 @@ export default {
 
                 input[type=text] {
                     padding: 6px;
-                    width: calc(100% - 16px);
+                    width: calc(100% - 14px);
                     font-size: 16px;
                     background-color: #dff5eb;
                     border: 1px solid #259764;
