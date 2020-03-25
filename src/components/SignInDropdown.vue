@@ -67,11 +67,11 @@ export default {
 #sign-in-dropdown {
     // position: relative;
     display: inline-block;
-    border-left: 1px solid white;
+    border-left: 1px solid $secondary;
 
     button {
-        background-color: #42b983;
-        color: white;
+        background-color: $primary;
+        color: $secondary;
         padding: 0px 16px;
         font-size: 24px;
         font-weight: 600;
@@ -88,7 +88,7 @@ export default {
         }
 
         &:hover {
-            background-color: #56c291;
+            background-color: $primaryLighter;
             cursor: pointer;
         }
     }
@@ -113,7 +113,7 @@ export default {
             display: block;
         }
         .dropbtn {
-            background-color: #56c291;
+            background-color: $primaryLighter;
 
             i {
                 transform: rotate(180deg);

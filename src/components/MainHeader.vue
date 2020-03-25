@@ -30,8 +30,8 @@ header {
     display: flex;
     align-items: center;
     padding: 0;
-    background-color: #42b983;
-    color: white;
+    background-color: $primary;
+    color: $secondary;
     position: fixed;
     width: 100%;
     top: 0;

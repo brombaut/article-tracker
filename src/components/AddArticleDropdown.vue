@@ -44,11 +44,11 @@ export default {
 #add-article-dropdown {
     position: relative;
     display: inline-block;
-    border-left: 1px solid white;
+    border-left: 1px solid $secondary;
 
     button {
-        background-color: #42b983;
-        color: white;
+        background-color: $primary;
+        color: $secondary;
         padding: 0px 16px;
         font-size: 24px;
         font-weight: 600;
@@ -65,7 +65,7 @@ export default {
         }
 
         &:hover {
-            background-color: #56c291;
+            background-color: $primaryLighter;
             cursor: pointer;
         }
     }
@@ -79,8 +79,8 @@ export default {
         padding-bottom: 60px;
         padding-left: 40px;
         padding-right: 40px;
-        background-color: #e1fcf1;
-        color: #34495e;
+        background-color: $primaryLighter;
+        color: $secondary;
         box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
         z-index: 1;
     }
@@ -90,7 +90,7 @@ export default {
             display: block;
         }
         .dropbtn {
-            background-color: #56c291;
+            background-color: $primaryLighter;
 
             i {
                 transform: rotate(180deg);

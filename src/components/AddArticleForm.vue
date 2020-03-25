@@ -162,13 +162,13 @@ export default {
 
         input[type=text] {
             padding: 6px;
-            border: 2px solid #42b983;
+            border: 2px solid $primary;
             border-radius: 4px;
             width: calc(100% - 8px);
             font-size: 20px;
 
             &:focus {
-                border: 2px solid #42b983;
+                border: 2px solid $primary;
             }
         }
 
@@ -207,7 +207,7 @@ export default {
 
 
             input:checked + span {
-                background-color: #42b983;
+                background-color: $primary;
                 color: #fff;
             }
         }

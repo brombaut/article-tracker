@@ -125,13 +125,13 @@ export default {
         input[type=text],
         input[type=password] {
             padding: 6px;
-            border: 2px solid #42b983;
+            border: 2px solid $primary;
             border-radius: 4px;
             width: calc(100% - 8px);
             font-size: 20px;
 
             &:focus {
-                border: 2px solid #42b983;
+                border: 2px solid $primary;
             }
         }
 

@@ -103,7 +103,13 @@
                 @click="handleRowClick(row)">
                 <td>{{ row.createdAt.seconds | formatEpochAsDate}}</td>
                 <td><b>{{ row.title }}</b></td>
-                <td class="url-column">{{ row.url }}</td>
+                <td class="url-column">
+                    <a
+                        :href="row.url"
+                        @click="(e) => e.preventDefault()">
+                        <i class="material-icons" style="font-size:24px">link</i>
+                    </a>
+                </td>
                 <td :class="{'readColumn': true, 'articleRead': row.read, 'articleNotRead': !row.read}">
                     <i v-if="row.read" class="material-icons" style="font-size:24px">check_box</i>
                     <i v-else class="material-icons" style="font-size:24px">check_box_outline_blank</i>
@@ -192,8 +198,8 @@ export default {
 
     thead {
         tr.column-headers {
-            background-color: #259764;
-            color: white;
+            background-color: $primary;
+            color: $secondary;
 
             .column-headers-primary {
                 display: flex;
@@ -216,19 +222,19 @@ export default {
 
                         &:hover {
                             cursor: pointer;
-                            color: #42b983;
+                            color: $primaryBrightest;
                         }
                     }
 
                     .selectedSort {
-                        color: #59fab1;
+                        color: $primaryBrighter;
                     }
                 }
             }
         }
         tr.filter-headers {
-            background-color: #dff5eb;
-            color: white;
+            background-color: $primaryLighter;
+            color: $secondary;
 
             th {
                 padding: 0;
@@ -237,8 +243,9 @@ export default {
                     padding: 6px;
                     width: calc(100% - 14px);
                     font-size: 16px;
-                    background-color: #dff5eb;
-                    border: 1px solid #259764;
+                    background-color: $primaryLighter;
+                    color: $secondary;
+                    border: 1px solid $primary;
 
                     &:focus {
                         border: 1px solid #42b983;
@@ -249,17 +256,24 @@ export default {
     }
 
     tbody {
+        td {
+            padding: 16px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: $secondary;
+        }
+
         tr:nth-child(even) {
-            background-color: #ebe7e7;
+            background-color: $secondaryBrighter;
         }
 
         tr:hover {
             cursor: pointer;
-            background-color: #e1fcf1;
+            background-color: $secondaryBrightest;
 
             .articleRead {
-                background-color: #e1fcf1;
-                color: #56c291;
+                background-color: $secondaryBrightest;
             }
         }
 
@@ -268,12 +282,21 @@ export default {
         }
 
         .articleRead {
-            background-color: #56c291;
-            color: white;
+            background-color: $secondary;
+            color: $primary;
         }
 
         .articleNotRead {
             color: #800c0c;
+        }
+
+        .url-column {
+            display: flex;
+            justify-content: center;
+
+            i {
+                color: $primary;
+            }
         }
     }
 

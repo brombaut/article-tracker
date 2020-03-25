@@ -102,6 +102,7 @@ export default {
 <style lang='scss'>
 #articles-container {
     max-width: 100%;
+    margin-top: 80px;
 }
 
 </style>
