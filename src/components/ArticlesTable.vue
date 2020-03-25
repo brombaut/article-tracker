@@ -105,7 +105,7 @@
                 <!-- Last Clicked -->
                 <th>
                     <input
-                        id='filter-created'
+                        id='filter-last-clicked'
                         type='text'
                         placeholder="Filter Last Clicked..."
                         v-model="filterLastClicked" />

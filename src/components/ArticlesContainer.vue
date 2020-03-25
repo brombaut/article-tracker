@@ -1,11 +1,68 @@
 <template>
   <div id='articles-container'>
-      <h1>
-          Article Records
-      </h1>
-      <ArticlesTable
+    <h1>
+        Article Records
+    </h1>
+    <ArticlesTable
         :rows="articlesToDisplay"
         :sortString="sortString" />
+    <div class='pagination-controls'>
+        <div
+            class='pagination-control'
+            @click="setPaginationToStart()">
+            <i class="material-icons">chevron_left</i>
+            <i class="material-icons">chevron_left</i>
+        </div>
+        <div
+            class='pagination-control'
+            @click="decrementPagination()">
+            <i class="material-icons">chevron_left</i>
+        </div>
+        <div class='page-numbers-container'>
+            <span class="page-sub-numbers-container">
+                <span
+                    v-if="pagination.pageNumber > 1"
+                    class="page-sub-number"
+                    @click="setPagination(pagination.pageNumber - 2)">
+                    {{ pagination.pageNumber - 2 }}
+                </span>
+                <span
+                    v-if="pagination.pageNumber > 0"
+                    class="page-sub-number"
+                    @click="setPagination(pagination.pageNumber - 1)">
+                    {{ pagination.pageNumber - 1 }}
+                </span>
+            </span>
+            <span class="page-main-number">
+                {{ pagination.pageNumber}}
+            </span>
+            <span class="page-sub-numbers-container">
+                <span
+                    v-if="pagination.pageNumber < numberOfPaginationPages"
+                    class="page-sub-number"
+                    @click="setPagination(pagination.pageNumber + 1)">
+                    {{ pagination.pageNumber + 1 }}
+                </span>
+                <span
+                    v-if="pagination.pageNumber < numberOfPaginationPages - 1"
+                    class="page-sub-number"
+                    @click="setPagination(pagination.pageNumber + 2)">
+                    {{ pagination.pageNumber + 2 }}
+                </span>
+            </span>
+        </div>
+        <div
+            class='pagination-control'
+            @click="incrementPagination()">
+            <i class="material-icons">chevron_right</i>
+        </div>
+        <div
+            class='pagination-control'
+            @click="setPaginationToEnd()">
+            <i class="material-icons">chevron_right</i>
+            <i class="material-icons">chevron_right</i>
+        </div>
+    </div>
   </div>
 </template>
 
@@ -32,6 +89,10 @@ export default {
                 attribute: 'created',
                 type: 'descending',
             },
+            pagination: {
+                pageNumber: 0,
+                recordsPerPage: 10,
+            },
         };
     },
     computed: {
@@ -39,10 +100,16 @@ export default {
             let returnArray = [...this.articles];
             returnArray = this.filterArray(returnArray);
             returnArray = this.sortArray(returnArray);
+            returnArray = this.getArticlesForPaginationPage(returnArray);
             return returnArray;
         },
         sortString() {
             return `${this.sort.attribute}-${this.sort.type}`;
+        },
+        numberOfPaginationPages() {
+            const totalRecords = this.articles.length;
+            const lastPageNumber = Math.floor(totalRecords / this.pagination.recordsPerPage);
+            return lastPageNumber;
         },
     },
     methods: {
@@ -119,6 +186,34 @@ export default {
                 return -1;
             };
         },
+        getArticlesForPaginationPage(array) {
+            const startIndex = this.pagination.pageNumber * this.pagination.recordsPerPage;
+            const endIndex = (this.pagination.pageNumber * this.pagination.recordsPerPage) + this.pagination.recordsPerPage;
+            return array.slice(startIndex, endIndex);
+        },
+        incrementPagination() {
+            const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
+            if (currentLastIndexDisplayed > this.articles.length) {
+                return;
+            }
+            this.pagination.pageNumber += 1;
+        },
+        decrementPagination() {
+            const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
+            if (this.pagination.pageNumber <= 0) {
+                return;
+            }
+            this.pagination.pageNumber -= 1;
+        },
+        setPaginationToStart() {
+            this.pagination.pageNumber = 0;
+        },
+        setPaginationToEnd() {
+            this.pagination.pageNumber = this.numberOfPaginationPages;
+        },
+        setPagination(index) {
+            this.pagination.pageNumber = index;
+        },
     },
     mounted() {
         bus.$on('allArticlesFromServer', this.handleAllArticlesFromServer);
@@ -132,6 +227,66 @@ export default {
 #articles-container {
     max-width: 100%;
     margin-top: 80px;
+
+    .pagination-controls {
+        margin: 16px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .pagination-control {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 44px;
+            margin: 0 8px;
+            user-select: none;
+
+            i {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 12px;
+                font-size: 44px;
+            }
+
+            &:hover {
+                cursor: pointer;
+                color: $primaryBrightest;
+            }
+        }
+
+        .page-numbers-container {
+            height: 100%;
+            font-size: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+
+            .page-sub-numbers-container {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 80px;
+
+                .page-sub-number {
+                    font-size: 12px;
+                    color: $primaryLighter;
+                    margin: 0 8px;
+
+                    &:hover {
+                        cursor: pointer;
+                        color: $primaryBrightest;
+                    }
+                }
+            }
+
+            .page-main-number {
+                margin: 0 8px;
+            }
+        }
+    }
 }
 
 </style>
