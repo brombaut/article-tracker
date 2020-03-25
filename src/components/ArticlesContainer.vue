@@ -103,13 +103,22 @@ export default {
             returnArray = this.getArticlesForPaginationPage(returnArray);
             return returnArray;
         },
+        allArticlesToDisplay() {
+            let returnArray = [...this.articles];
+            returnArray = this.filterArray(returnArray);
+            returnArray = this.sortArray(returnArray);
+            return returnArray;
+        },
         sortString() {
             return `${this.sort.attribute}-${this.sort.type}`;
         },
         numberOfPaginationPages() {
-            const totalRecords = this.articles.length;
+            const totalRecords = this.allArticlesToDisplay.length;
             const lastPageNumber = Math.floor(totalRecords / this.pagination.recordsPerPage);
             return lastPageNumber;
+        },
+        displayedArticlesLength() {
+            return this.articlesToDisplay.length;
         },
     },
     methods: {
@@ -118,6 +127,7 @@ export default {
         },
         handleFilterUpdated(updatedFilterObject) {
             this.filters[updatedFilterObject.type] = updatedFilterObject.value;
+            this.pagination.pageNumber = 0;
         },
         handleSortUpdated(updateSortType) {
             this.sort = { ...updateSortType };
@@ -193,7 +203,7 @@ export default {
         },
         incrementPagination() {
             const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
-            if (currentLastIndexDisplayed > this.articles.length) {
+            if (currentLastIndexDisplayed > this.allArticlesToDisplay.length) {
                 return;
             }
             this.pagination.pageNumber += 1;
@@ -219,6 +229,7 @@ export default {
         bus.$on('allArticlesFromServer', this.handleAllArticlesFromServer);
         bus.$on('filterUpdated', this.handleFilterUpdated);
         bus.$on('sortUpdated', this.handleSortUpdated);
+        bus.$emit('forceArticleReload');
     },
 };
 </script>

@@ -12,5 +12,4 @@ Below is a list of features/functionality that I think would be worth implementi
 - [ ] Tags on articles
 - [x] Filter by Read/NotRead, not just sort
 - [x] Number of articles in the table (pagination maybe?)
-- [ ] A whole look and feel redesign would be cool
 

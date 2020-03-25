@@ -95,6 +95,7 @@ export default {
         bus.$on('articleClicked', this.handleArticleOpened);
         bus.$on('attemptUserSignIn', this.handleAttemptUserSignIn);
         bus.$on('attemptUserSignOut', this.handleAttemptUserSignOut);
+        bus.$on('forceArticleReload', this.loadAllArticleRecordsFromServer);
         this.loadAllArticleRecordsFromServer();
     },
 };

@@ -247,6 +247,7 @@ export default {
 #articles-table {
     border-collapse: collapse;
     width: 100%;
+    user-select: none;
 
     td, th {
         border: 1px solid #bbbbbb;
