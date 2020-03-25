@@ -24,6 +24,10 @@ export default {
 </script>
 
 <style lang='scss'>
+html,
+body {
+    background-color: $secondary;
+}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
