@@ -36,7 +36,7 @@ export default {
         articlesToDisplay() {
             let returnArray = [...this.articles];
             if (this.filters.created) {
-                returnArray = returnArray.filter(record => record.createdAt.seconds.toString().includes(this.filters.created.toString()));
+                returnArray = returnArray.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt.seconds).includes(this.filters.created.toString()));
             }
             if (this.filters.title) {
                 returnArray = returnArray.filter(record => record.title.toString().toLowerCase().includes(this.filters.title.toString().toLowerCase()));
@@ -89,6 +89,15 @@ export default {
         },
         handleSortUpdated(updateSortType) {
             this.sort = { ...updateSortType };
+        },
+        convertSecondsEpochToDateFormatted(second) {
+            if (!second) {
+                return '';
+            }
+            const date = new Date(0);
+            date.setUTCSeconds(second);
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
         },
     },
     mounted() {
