@@ -126,7 +126,15 @@
                         placeholder="Filter URL..."
                         v-model="filterUrl" />
                 </th>
-                <th></th>
+                <th>
+                    <select
+                        id='filter-read'
+                        v-model="filterRead">
+                        <option value="">All</option>
+                        <option value="read">Read</option>
+                        <option value="unread">Unread</option>
+                    </select>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -168,6 +176,7 @@ export default {
             filterLastClicked: '',
             filterTitle: '',
             filterUrl: '',
+            filterRead: '',
         };
     },
     filters: {
@@ -202,6 +211,13 @@ export default {
             };
             bus.$emit('filterUpdated', filterUpdateObject);
         },
+        filterLastClicked(newVal) {
+            const filterUpdateObject = {
+                type: 'created',
+                value: newVal,
+            };
+            bus.$emit('filterUpdated', filterUpdateObject);
+        },
         filterTitle(newVal) {
             const filterUpdateObject = {
                 type: 'title',
@@ -212,6 +228,13 @@ export default {
         filterUrl(newVal) {
             const filterUpdateObject = {
                 type: 'url',
+                value: newVal,
+            };
+            bus.$emit('filterUpdated', filterUpdateObject);
+        },
+        filterRead(newVal) {
+            const filterUpdateObject = {
+                type: 'read',
                 value: newVal,
             };
             bus.$emit('filterUpdated', filterUpdateObject);
@@ -285,6 +308,15 @@ export default {
                     &:focus {
                         border: 1px solid #42b983;
                     }
+                }
+
+                #filter-read {
+                    padding: 6px;
+                    width: 100%;
+                    font-size: 16px;
+                    background-color: $primaryLighter;
+                    color: $secondary;
+                    border: 1px solid $primary;
                 }
             }
         }

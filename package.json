@@ -51,6 +51,8 @@
             "space-before-function-paren": 0,
             "no-use-before-define": 0,
             "no-plusplus": 0,
+            "no-useless-return": 0,
+            "no-unreachable": 0,
             "max-len": [
                 "warn",
                 400

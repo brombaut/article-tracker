@@ -26,6 +26,7 @@ export default {
                 lastClicked: '',
                 title: '',
                 url: '',
+                read: '',
             },
             sort: {
                 attribute: 'created',
@@ -47,7 +48,6 @@ export default {
     methods: {
         handleAllArticlesFromServer(allArticles) {
             this.articles = [...allArticles];
-            console.log(this.articles);
         },
         handleFilterUpdated(updatedFilterObject) {
             this.filters[updatedFilterObject.type] = updatedFilterObject.value;
@@ -76,6 +76,10 @@ export default {
             }
             if (this.filters.url) {
                 array = array.filter(record => record.url.toString().toLowerCase().includes(this.filters.url.toString().toLowerCase()));
+            }
+            if (this.filters.read) {
+                const readShouldBe = this.filters.read === 'read';
+                array = array.filter(record => record.read === readShouldBe);
             }
             return array;
         },
