@@ -1,6 +1,9 @@
 <template>
   <table id='articles-table'>
       <thead>
+            <tr class=table-header>
+                <th colspan="5">Article Records</th>
+            </tr>
             <tr class='column-headers'>
                 <!-- Created -->
                 <th>
@@ -248,14 +251,24 @@ export default {
     border-collapse: collapse;
     width: 100%;
     user-select: none;
+    margin: 8px 0;
 
     td, th {
-        border: 1px solid #bbbbbb;
+        border: 1px solid $secondaryBrightest;
         text-align: left;
         padding: 8px;
     }
 
     thead {
+        tr.table-header {
+            background-color: $primary;
+            color: $secondary;
+            font-size: 36px;
+
+            th {
+                text-align: center;
+            }
+        }
         tr.column-headers {
             background-color: $primary;
             color: $secondary;
@@ -350,7 +363,7 @@ export default {
         }
 
         .articleRead {
-            background-color: $secondary;
+            // background-color: $secondary;
             color: $primary;
         }
 

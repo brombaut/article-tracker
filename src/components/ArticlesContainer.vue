@@ -1,8 +1,5 @@
 <template>
   <div id='articles-container'>
-    <h1>
-        Article Records
-    </h1>
     <ArticlesTable
         :rows="articlesToDisplay"
         :sortString="sortString" />
@@ -113,7 +110,7 @@ export default {
             return `${this.sort.attribute}-${this.sort.type}`;
         },
         numberOfPaginationPages() {
-            const totalRecords = this.allArticlesToDisplay.length;
+            const totalRecords = this.allArticlesToDisplay.length - 1;
             const lastPageNumber = Math.floor(totalRecords / this.pagination.recordsPerPage);
             return lastPageNumber;
         },
