@@ -4,10 +4,10 @@ A simple tool I use to keep track of tech-related articles I have read and artic
 
 ## Future Work
 Below is a list of features/functionality that I think would be worth implementing in the future:
-- [ ] Show dates, not epochs
-- [ ] Show last clicked date
+- [x] Show dates, not epochs
+- [x] Show last clicked date
 - [ ] Click Count
-- [ ] Cookie/local storage to stay signed in
+- [x] Cookie/local storage to stay signed in
 - [ ] Tags on articles
 - [ ] Filter by Read/NotRead, not just sort
 - [ ] Number of articles in the table (pagination maybe?)

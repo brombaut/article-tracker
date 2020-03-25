@@ -23,6 +23,7 @@ export default {
             articles: [],
             filters: {
                 created: '',
+                lastClicked: '',
                 title: '',
                 url: '',
             },
@@ -35,45 +36,8 @@ export default {
     computed: {
         articlesToDisplay() {
             let returnArray = [...this.articles];
-            if (this.filters.created) {
-                returnArray = returnArray.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt.seconds).includes(this.filters.created.toString()));
-            }
-            if (this.filters.title) {
-                returnArray = returnArray.filter(record => record.title.toString().toLowerCase().includes(this.filters.title.toString().toLowerCase()));
-            }
-            if (this.filters.url) {
-                returnArray = returnArray.filter(record => record.url.toString().toLowerCase().includes(this.filters.url.toString().toLowerCase()));
-            }
-            returnArray = returnArray.sort((a, b) => {
-                if (this.sort.attribute === 'created') {
-                    if (this.sort.type === 'ascending') {
-                        if (a.createdAt.seconds >= b.createdAt.seconds) {
-                            return 1;
-                        }
-                        return -1;
-                    }
-                    if (a.createdAt.seconds < b.createdAt.seconds) {
-                        return 1;
-                    }
-                    return -1;
-                }
-                if (this.sort.type === 'ascending') {
-                    if (this.sort.attribute === 'created') {
-                        if (a.createdAt.seconds >= b.createdAt.seconds) {
-                            return 1;
-                        }
-                        return -1;
-                    }
-                    if (a[this.sort.attribute] >= b[this.sort.attribute]) {
-                        return 1;
-                    }
-                    return -1;
-                }
-                if (a[this.sort.attribute] < b[this.sort.attribute]) {
-                    return 1;
-                }
-                return -1;
-            });
+            returnArray = this.filterArray(returnArray);
+            returnArray = this.sortArray(returnArray);
             return returnArray;
         },
         sortString() {
@@ -83,6 +47,7 @@ export default {
     methods: {
         handleAllArticlesFromServer(allArticles) {
             this.articles = [...allArticles];
+            console.log(this.articles);
         },
         handleFilterUpdated(updatedFilterObject) {
             this.filters[updatedFilterObject.type] = updatedFilterObject.value;
@@ -98,6 +63,57 @@ export default {
             date.setUTCSeconds(second);
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        },
+        filterArray(array) {
+            if (this.filters.created) {
+                array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt.seconds).includes(this.filters.created.toString()));
+            }
+            if (this.filters.lastClicked) {
+                array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.lastClicked.seconds).includes(this.filters.lastClicked.toString()));
+            }
+            if (this.filters.title) {
+                array = array.filter(record => record.title.toString().toLowerCase().includes(this.filters.title.toString().toLowerCase()));
+            }
+            if (this.filters.url) {
+                array = array.filter(record => record.url.toString().toLowerCase().includes(this.filters.url.toString().toLowerCase()));
+            }
+            return array;
+        },
+        sortArray(array) {
+            let sortFunction = this.sortByGeneralComparison;
+            if (this.sort.attribute === 'created') {
+                sortFunction = this.sortBySecondsAttribute('createdAt');
+            }
+            if (this.sort.attribute === 'lastClicked') {
+                sortFunction = this.sortBySecondsAttribute('lastClicked');
+            }
+            return array.sort(sortFunction);
+        },
+        sortByGeneralComparison(a, b) {
+            if (this.sort.type === 'ascending') {
+                if (a[this.sort.attribute] >= b[this.sort.attribute]) {
+                    return 1;
+                }
+                return -1;
+            }
+            if (a[this.sort.attribute] < b[this.sort.attribute]) {
+                return 1;
+            }
+            return -1;
+        },
+        sortBySecondsAttribute(attribute) {
+            return (a, b) => {
+                if (this.sort.type === 'ascending') {
+                    if (a[attribute].seconds >= b[attribute].seconds) {
+                        return 1;
+                    }
+                    return -1;
+                }
+                if (a[attribute].seconds < b[attribute].seconds) {
+                    return 1;
+                }
+                return -1;
+            };
         },
     },
     mounted() {

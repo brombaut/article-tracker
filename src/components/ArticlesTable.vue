@@ -2,6 +2,7 @@
   <table id='articles-table'>
       <thead>
             <tr class='column-headers'>
+                <!-- Created -->
                 <th>
                     <div class='column-headers-primary'>
                         <div class='column-header-title'>Created</div>
@@ -19,6 +20,25 @@
                         </div>
                     </div>
                 </th>
+                <!-- Last Clicked -->
+                <th>
+                    <div class='column-headers-primary'>
+                        <div class='column-header-title'>Last Clicked</div>
+                        <div class='column-header-sort-icons'>
+                            <i
+                                :class="{'material-icons': true, 'selectedSort': sortString === 'lastClicked-ascending' }"
+                                @click="() => setSortType('lastClicked', 'ascending')">
+                                arrow_drop_up
+                            </i>
+                            <i
+                                :class="{'material-icons': true, 'selectedSort': sortString === 'lastClicked-descending' }"
+                                @click="() => setSortType('lastClicked', 'descending')">
+                                arrow_drop_down
+                            </i>
+                        </div>
+                    </div>
+                </th>
+                <!-- Title -->
                 <th class="title-column">
                     <div class='column-headers-primary'>
                         <div class='column-header-title'>Title</div>
@@ -36,6 +56,7 @@
                         </div>
                     </div>
                 </th>
+                <!-- URL -->
                 <th class="url-column">
                     <div class='column-headers-primary'>
                         <div class='column-header-title'>URL</div>
@@ -53,6 +74,7 @@
                         </div>
                     </div>
                 </th>
+                <!-- Read -->
                 <th>
                     <div class='column-headers-primary'>
                         <div class='column-header-title'>Read</div>
@@ -72,6 +94,7 @@
                 </th>
             </tr>
             <tr class='filter-headers'>
+                <!-- Created At -->
                 <th>
                     <input
                         id='filter-created'
@@ -79,6 +102,15 @@
                         placeholder="Filter Created..."
                         v-model="filterCreated" />
                 </th>
+                <!-- Last Clicked -->
+                <th>
+                    <input
+                        id='filter-created'
+                        type='text'
+                        placeholder="Filter Last Clicked..."
+                        v-model="filterLastClicked" />
+                </th>
+                <!-- Title -->
                 <th>
                     <input
                         id='filter-title'
@@ -86,6 +118,7 @@
                         placeholder="Filter Title..."
                         v-model="filterTitle" />
                 </th>
+                <!-- Url -->
                 <th>
                     <input
                         id='filter-url'
@@ -102,6 +135,7 @@
                 :key="row.url"
                 @click="handleRowClick(row)">
                 <td>{{ row.createdAt.seconds | formatEpochAsDate}}</td>
+                <td>{{ row.lastClicked.seconds | formatEpochAsDate}}</td>
                 <td><b>{{ row.title }}</b></td>
                 <td class="url-column">
                     <a
@@ -131,6 +165,7 @@ export default {
     data() {
         return {
             filterCreated: '',
+            filterLastClicked: '',
             filterTitle: '',
             filterUrl: '',
         };
