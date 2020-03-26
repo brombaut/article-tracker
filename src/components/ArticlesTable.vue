@@ -251,7 +251,6 @@ export default {
     border-collapse: collapse;
     width: 100%;
     user-select: none;
-    margin: 8px 0;
 
     td, th {
         border: 1px solid $secondaryBrightest;

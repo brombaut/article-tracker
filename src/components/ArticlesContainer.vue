@@ -1,76 +1,79 @@
 <template>
-  <div id='articles-container'>
-    <ArticlesTable
-        :rows="articlesToDisplay"
-        :sortString="sortString" />
-    <div class='pagination-controls'>
-        <div
-            class='pagination-control'
-            @click="setPaginationToStart()">
-            <i class="material-icons">chevron_left</i>
-            <i class="material-icons">chevron_left</i>
-        </div>
-        <div
-            class='pagination-control'
-            @click="decrementPagination()">
-            <i class="material-icons">chevron_left</i>
-        </div>
-        <div class='page-numbers-container'>
-            <span class="page-sub-numbers-container">
-                <span
-                    v-if="pagination.pageNumber > 1"
-                    class="page-sub-number"
-                    @click="setPagination(pagination.pageNumber - 2)">
-                    {{ pagination.pageNumber - 2 }}
+    <div id='articles-container'>
+        <StatisticsContainer :articles="articles"/>
+        <ArticlesTable
+            :rows="articlesToDisplay"
+            :sortString="sortString" />
+        <div class='pagination-controls'>
+            <div
+                class='pagination-control'
+                @click="setPaginationToStart()">
+                <i class="material-icons">chevron_left</i>
+                <i class="material-icons">chevron_left</i>
+            </div>
+            <div
+                class='pagination-control'
+                @click="decrementPagination()">
+                <i class="material-icons">chevron_left</i>
+            </div>
+            <div class='page-numbers-container'>
+                <span class="page-sub-numbers-container">
+                    <span
+                        v-if="pagination.pageNumber > 1"
+                        class="page-sub-number"
+                        @click="setPagination(pagination.pageNumber - 2)">
+                        {{ pagination.pageNumber - 2 }}
+                    </span>
+                    <span
+                        v-if="pagination.pageNumber > 0"
+                        class="page-sub-number"
+                        @click="setPagination(pagination.pageNumber - 1)">
+                        {{ pagination.pageNumber - 1 }}
+                    </span>
                 </span>
-                <span
-                    v-if="pagination.pageNumber > 0"
-                    class="page-sub-number"
-                    @click="setPagination(pagination.pageNumber - 1)">
-                    {{ pagination.pageNumber - 1 }}
+                <span class="page-main-number">
+                    {{ pagination.pageNumber}}
                 </span>
-            </span>
-            <span class="page-main-number">
-                {{ pagination.pageNumber}}
-            </span>
-            <span class="page-sub-numbers-container">
-                <span
-                    v-if="pagination.pageNumber < numberOfPaginationPages"
-                    class="page-sub-number"
-                    @click="setPagination(pagination.pageNumber + 1)">
-                    {{ pagination.pageNumber + 1 }}
+                <span class="page-sub-numbers-container">
+                    <span
+                        v-if="pagination.pageNumber < numberOfPaginationPages"
+                        class="page-sub-number"
+                        @click="setPagination(pagination.pageNumber + 1)">
+                        {{ pagination.pageNumber + 1 }}
+                    </span>
+                    <span
+                        v-if="pagination.pageNumber < numberOfPaginationPages - 1"
+                        class="page-sub-number"
+                        @click="setPagination(pagination.pageNumber + 2)">
+                        {{ pagination.pageNumber + 2 }}
+                    </span>
                 </span>
-                <span
-                    v-if="pagination.pageNumber < numberOfPaginationPages - 1"
-                    class="page-sub-number"
-                    @click="setPagination(pagination.pageNumber + 2)">
-                    {{ pagination.pageNumber + 2 }}
-                </span>
-            </span>
-        </div>
-        <div
-            class='pagination-control'
-            @click="incrementPagination()">
-            <i class="material-icons">chevron_right</i>
-        </div>
-        <div
-            class='pagination-control'
-            @click="setPaginationToEnd()">
-            <i class="material-icons">chevron_right</i>
-            <i class="material-icons">chevron_right</i>
+            </div>
+            <div
+                class='pagination-control'
+                @click="incrementPagination()">
+                <i class="material-icons">chevron_right</i>
+            </div>
+            <div
+                class='pagination-control'
+                @click="setPaginationToEnd()">
+                <i class="material-icons">chevron_right</i>
+                <i class="material-icons">chevron_right</i>
+            </div>
         </div>
     </div>
-  </div>
 </template>
 
 <script>
 import { bus } from '@/main';
 import ArticlesTable from '@/components/ArticlesTable.vue';
+import StatisticsContainer from '@/components/StatisticsContainer.vue';
 
 export default {
     name: 'ArticlesContainer',
     components: {
         ArticlesTable,
+        StatisticsContainer,
     },
     data() {
         return {
@@ -237,10 +240,12 @@ export default {
     margin-top: 80px;
 
     .pagination-controls {
-        margin: 16px 0;
+        padding: 8px 0;
         display: flex;
         justify-content: center;
         align-items: center;
+        border: 1px solid $secondaryBrightest;
+        margin-bottom: 16px;
 
         .pagination-control {
             display: flex;
