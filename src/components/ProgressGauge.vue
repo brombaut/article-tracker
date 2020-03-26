@@ -87,7 +87,7 @@ export default {
             position: absolute;
             right: 0;
             width: 30px;
-            color: $secondaryBrightest;
+            color: $secondaryLighter;
         }
         .title {
             z-index: 10;
@@ -152,7 +152,7 @@ export default {
             width: rem(202);
             height: rem(102);
             margin: -1px 0 0 -1px;
-            background: $secondaryBrightest;
+            background: $secondaryLighter;
             border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
         }
     }
