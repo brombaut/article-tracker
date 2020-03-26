@@ -19,6 +19,11 @@
             <div class='page-numbers-container'>
                 <span class="page-sub-numbers-container">
                     <span
+                        v-if="pagination.pageNumber > 2"
+                        class="page-sub-ellipse">
+                        ...
+                    </span>
+                    <span
                         v-if="pagination.pageNumber > 1"
                         class="page-sub-number"
                         @click="setPagination(pagination.pageNumber - 2)">
@@ -46,6 +51,11 @@
                         class="page-sub-number"
                         @click="setPagination(pagination.pageNumber + 2)">
                         {{ pagination.pageNumber + 2 }}
+                    </span>
+                    <span
+                        v-if="pagination.pageNumber < numberOfPaginationPages - 2"
+                        class="page-sub-ellipse">
+                        ...
                     </span>
                 </span>
             </div>
@@ -293,6 +303,12 @@ export default {
                         cursor: pointer;
                         color: $primaryBrightest;
                     }
+                }
+
+                .page-sub-ellipse {
+                    font-size: 12px;
+                    color: $primaryLighter;
+                    margin: 0 8px;
                 }
             }
 
