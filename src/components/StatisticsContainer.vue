@@ -2,6 +2,7 @@
     <div id='statistics-container'>
         <h1>Reading Statistics</h1>
         <div class="gauge-container">
+            <ProgressGauge :gaugeData="readTodayData"/>
             <ProgressGauge :gaugeData="pastWeekData"/>
             <ProgressGauge :gaugeData="pastMonthData"/>
             <ProgressGauge :gaugeData="allTimeData"/>
@@ -46,6 +47,16 @@ export default {
                 secondaryValue: this.unreadArticlesCount(pastMonthRecords),
             };
         },
+        readTodayData() {
+            const secondsDate = this.getStartOfTodaySeconds();
+            const pastMonthRecords = this.getArticlesLastClickedAfterSeconds(secondsDate);
+            const readToday = this.readArticlesCount(pastMonthRecords) > 0;
+            return {
+                title: 'Read Today',
+                primaryValue: readToday,
+                secondaryValue: !readToday,
+            };
+        },
     },
     methods: {
         readArticlesCount(articles) {
@@ -54,6 +65,11 @@ export default {
         unreadArticlesCount(articles) {
             return articles.filter(article => !article.read).length;
         },
+        getStartOfTodaySeconds() {
+            const today = new Date();
+            const priorDateMilli = today.setHours(0, 0, 0, 0);
+            return Math.floor(priorDateMilli / 1000);
+        },
         getSecondsFromCurrentDateMinusDays(days) {
             const today = new Date();
             const priorDateMilli = new Date().setDate(today.getDate() - days);
@@ -61,6 +77,9 @@ export default {
         },
         getArticlesCreatedAfterSeconds(seconds) {
             return this.articles.filter(article => article.createdAt.seconds > seconds);
+        },
+        getArticlesLastClickedAfterSeconds(seconds) {
+            return this.articles.filter(article => article.lastClicked.seconds > seconds);
         },
     },
 };

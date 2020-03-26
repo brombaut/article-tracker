@@ -8,10 +8,10 @@
         </div>
         <div class="gauge-info">
             <div class="primary-value">
-                {{ gaugeData.primaryValue }}
+                {{ parimeryValueLabel }}
             </div>
             <div class="secondary-value">
-                {{ gaugeData.secondaryValue }}
+                {{ secondaryValueLabel }}
             </div>
             <div class="title">
                 {{ gaugeData.title }}
@@ -26,6 +26,20 @@ export default {
     props: {
         gaugeData: Object,
     },
+    computed: {
+        parimeryValueLabel() {
+            if (typeof this.gaugeData.primaryValue === 'boolean') {
+                return this.gaugeData.primaryValue ? 'Yes' : 'No';
+            }
+            return this.gaugeData.primaryValue;
+        },
+        secondaryValueLabel() {
+            if (typeof this.gaugeData.secondaryValue === 'boolean') {
+                return this.gaugeData.secondaryValue ? 'Yes' : 'No';
+            }
+            return this.gaugeData.secondaryValue;
+        },
+    },
     watch: {
         gaugeData() {
             this.setProgressBar();
@@ -33,7 +47,12 @@ export default {
     },
     methods: {
         setProgressBar() {
-            const percent = this.gaugeData.primaryValue / (this.gaugeData.primaryValue + this.gaugeData.secondaryValue);
+            let percent;
+            if (typeof this.gaugeData.primaryValue === 'boolean' && typeof this.gaugeData.secondaryValue === 'boolean') {
+                percent = this.gaugeData.primaryValue ? 1 : 0;
+            } else {
+                percent = this.gaugeData.primaryValue / (this.gaugeData.primaryValue + this.gaugeData.secondaryValue);
+            }
             const rotate = Math.floor(180 * percent);
             const progresEl = this.$el.querySelector('.semi-circle--mask');
             progresEl.style.transform = `rotate(${rotate}deg) translate3d(0,0,0)`;
