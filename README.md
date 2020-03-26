@@ -7,7 +7,7 @@ Below is a list of features/functionality that I think would be worth implementi
 - [x] Show dates, not epochs
 - [x] Show last clicked date
 - [ ] Click Count
-- [ ] Stats (read vs unread, articles read this week, month, year, etc)
+- [x] Stats (read vs unread, articles read this week, month, year, etc)
 - [x] Cookie/local storage to stay signed in
 - [ ] Tags on articles
 - [x] Filter by Read/NotRead, not just sort
