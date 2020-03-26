@@ -266,6 +266,7 @@ export default {
 
             th {
                 text-align: center;
+                padding: 16px 0;
             }
         }
         tr.column-headers {

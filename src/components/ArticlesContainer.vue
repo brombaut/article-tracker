@@ -238,6 +238,7 @@ export default {
 #articles-container {
     max-width: 100%;
     margin-top: 80px;
+    min-width: 1400px;
 
     .pagination-controls {
         padding: 8px 0;

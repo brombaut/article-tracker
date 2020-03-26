@@ -57,6 +57,7 @@ export default {
         position: relative;
         margin: 0 rem(20);
         margin-top: 4px;
+        user-select: none;
 
         .primary-value {
             position: absolute;
@@ -134,6 +135,16 @@ export default {
             margin: -1px 0 0 -1px;
             background: $secondaryBrightest;
             border-radius: 50% 50% 50% 50% / 100% 100% 0% 0% ;
+        }
+    }
+
+     &:hover {
+        .title,
+        .primary-value {
+            color: $primaryBrightest;
+        }
+        .semi-circle {
+            background: $primaryBrightest;
         }
     }
 }
