@@ -9,7 +9,7 @@ Below is a list of features/functionality that I think would be worth implementi
 - [ ] Click Count
 - [x] Stats (read vs unread, articles read this week, month, year, etc)
 - [x] Cookie/local storage to stay signed in
-- [ ] Tags on articles
+- [ ] Tags on articles (Potentially Scrape?)
 - [x] Filter by Read/NotRead, not just sort
 - [x] Number of articles in the table (pagination maybe?)
 - [x] Update font
