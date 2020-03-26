@@ -13,5 +13,5 @@ Below is a list of features/functionality that I think would be worth implementi
 - [x] Filter by Read/NotRead, not just sort
 - [x] Number of articles in the table (pagination maybe?)
 - [x] Update font
-- [ ] Read Today Indicator
+- [x] Read Today Indicator
 
