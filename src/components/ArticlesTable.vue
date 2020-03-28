@@ -179,7 +179,7 @@ export default {
             filterLastClicked: '',
             filterTitle: '',
             filterUrl: '',
-            filterRead: '',
+            filterRead: 'unread',
         };
     },
     filters: {

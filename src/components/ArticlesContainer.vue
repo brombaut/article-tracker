@@ -93,7 +93,7 @@ export default {
                 lastClicked: '',
                 title: '',
                 url: '',
-                read: '',
+                read: 'unread',
             },
             sort: {
                 attribute: 'created',
