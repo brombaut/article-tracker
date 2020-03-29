@@ -14,7 +14,7 @@ Below is a list of features/functionality that I think would be worth implementi
 - [x] Number of articles in the table (pagination maybe?)
 - [x] Update font
 - [x] Read Today Indicator
-- [ ] Automate Scraping Title from Article
+- [x] Automate Scraping Title from Article
 - [ ] Add a N Minute Read field, automate scraping that aswell
 - [x] Refresh Button
 - [x] 'I'm feeling lucky' - Random unread button

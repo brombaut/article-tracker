@@ -1,14 +1,7 @@
 <template>
     <form id='add-article-form' autocomplete="off">
         <h2>New Article Record</h2>
-        <div class='form-element'>
-            <label for="article-title">Title:</label>
-            <input
-                type="text"
-                id="article-title"
-                name="article-title"
-                v-model="articleTitle">
-        </div>
+        <p>For dev.to articles, just enter the URL, and I'll scrape the articles title and minute read fields.</p>
         <div class='form-element'>
             <label for="article-url">URL:</label>
             <input
@@ -16,6 +9,14 @@
                 id="article-url"
                 name="article-url"
                 v-model="articleUrl">
+        </div>
+        <div class='form-element'>
+            <label for="article-title">Title:</label>
+            <input
+                type="text"
+                id="article-title"
+                name="article-title"
+                v-model="articleTitle">
         </div>
         <div class='form-element'>
             <div id='add-article-read-container'>
@@ -48,7 +49,7 @@
 
 <script>
 import { bus } from '@/main';
-import alreadyReadArticles from '@/utils/alreadyReadArticles';
+import scraper from '@/services/scraper';
 
 export default {
     name: 'AddArticleForm',
@@ -64,22 +65,21 @@ export default {
     methods: {
         handleSubmit(e) {
             e.preventDefault();
+            this.setIsSubmitting();
             let stop = false;
-            const titleInput = document.querySelector('#article-title');
-            const urlInput = document.querySelector('#article-url');
-            if (!this.articleTitle) {
-                stop = true;
-                titleInput.classList.add('red-border');
-            } else {
-                titleInput.classList.remove('red-border');
-            }
-            if (!this.articleUrl) {
-                stop = true;
-                urlInput.classList.add('red-border');
-            } else {
-                urlInput.classList.remove('red-border');
-            }
+            stop = this.validateUrl();
             if (stop) {
+                this.setIsNotSubmitting();
+                return;
+            }
+            if (!this.articleTitle) {
+                this.attemptArticleInformationScrape();
+                return;
+            }
+
+            stop = this.validateTitle();
+            if (stop) {
+                this.setIsNotSubmitting();
                 return;
             }
             this.setIsSubmitting();
@@ -90,12 +90,55 @@ export default {
             };
             bus.$emit('addArticleFormSubmitted', article);
         },
+        attemptArticleInformationScrape() {
+            scraper.scrapeArticleInformation(this.articleUrl).then(scrapedArticleInfo => {
+                if (!scrapedArticleInfo.articleTitle) {
+                    this.validateTitle();
+                    this.setIsNotSubmitting();
+                    return;
+                }
+                this.articleTitle = scrapedArticleInfo.articleTitle;
+                this.validateTitle();
+                const article = {
+                    title: this.articleTitle,
+                    url: this.articleUrl,
+                    read: this.articleRead,
+                    minuteRead: scrapedArticleInfo.minuteRead,
+                };
+                bus.$emit('addArticleFormSubmitted', article);
+            });
+        },
+        validateUrl() {
+            const urlInput = document.querySelector('#article-url');
+            if (!this.articleUrl) {
+                urlInput.classList.add('red-border');
+                return true;
+            }
+            urlInput.classList.remove('red-border');
+            return false;
+        },
+        validateTitle() {
+            const titleInput = document.querySelector('#article-title');
+            if (!this.articleTitle) {
+                titleInput.classList.add('red-border');
+                return true;
+            }
+            titleInput.classList.remove('red-border');
+            return false;
+        },
         setIsSubmitting() {
             this.isSubmitting = true;
             document.querySelector('#article-title').disabled = true;
             document.querySelector('#article-url').disabled = true;
             document.querySelector('#has-been-read').disabled = true;
             document.querySelector('#add-article-submit-button').disabled = true;
+        },
+        setIsNotSubmitting() {
+            this.isSubmitting = false;
+            document.querySelector('#article-title').disabled = false;
+            document.querySelector('#article-url').disabled = false;
+            document.querySelector('#has-been-read').disabled = false;
+            document.querySelector('#add-article-submit-button').disabled = false;
         },
         resetForm() {
             this.isSubmitting = false;
@@ -106,22 +149,6 @@ export default {
             document.querySelector('#article-url').disabled = false;
             document.querySelector('#has-been-read').disabled = false;
             document.querySelector('#add-article-submit-button').disabled = false;
-        },
-        submitRealArticle() {
-            const { articles } = alreadyReadArticles;
-            for (let i = 0; i < articles.length; i++) {
-                setTimeout(() => {
-                    bus.$emit('addArticleFormSubmitted', articles[i]);
-                }, i * 1000);
-            }
-        },
-        submitNotReadArticles() {
-            const { notReadArticles } = alreadyReadArticles;
-            for (let i = 0; i < notReadArticles.length; i++) {
-                setTimeout(() => {
-                    bus.$emit('addArticleFormSubmitted', notReadArticles[i]);
-                }, i * 1000);
-            }
         },
         setShowOnlyBenMessage(val) {
             this.showOnlyBenMessage = val;
@@ -222,6 +249,7 @@ export default {
 
             &:hover {
                 cursor: pointer;
+                background: $primaryBrighter;
             }
 
             span {
@@ -239,8 +267,8 @@ export default {
                 height: 20px;
                 margin: 8px;
                 border-radius: 50%;
-                border: 3px solid #fff;
-                border-color: #fff transparent #fff transparent;
+                border: 3px solid $secondary;
+                border-color: $secondary transparent $secondary transparent;
                 animation: lds-dual-ring 1.2s linear infinite;
             }
             @keyframes lds-dual-ring {
