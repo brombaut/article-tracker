@@ -4,6 +4,7 @@
         <h1>BEC Article Tracker</h1>
         <div class="expand"></div>
         <div class="actions-container">
+            <RandomArticleButton />
             <RefreshButton />
             <SignInDropdown />
             <AddArticleDropdown />
@@ -15,6 +16,7 @@
 import AddArticleDropdown from '@/components/AddArticleDropdown.vue';
 import SignInDropdown from '@/components/SignInDropdown.vue';
 import RefreshButton from '@/components/RefreshButton.vue';
+import RandomArticleButton from '@/components/RandomArticleButton.vue';
 
 export default {
     name: 'MainHeader',
@@ -22,6 +24,7 @@ export default {
         AddArticleDropdown,
         SignInDropdown,
         RefreshButton,
+        RandomArticleButton,
     },
 };
 </script>

@@ -89,6 +89,11 @@ export default {
                     bus.$emit('signOutSuccess');
                 });
         },
+        handleRandomUnreadArticleRequest() {
+            const unreadArticles = this.articles.filter(article => !article.read);
+            const randomIndex = Math.floor(Math.random() * unreadArticles.length);
+            bus.$emit('randomUnreadArticleEmit', unreadArticles[randomIndex]);
+        },
     },
     mounted() {
         bus.$on('addArticleFormSubmitted', this.postNewArticleRecord);
@@ -96,6 +101,7 @@ export default {
         bus.$on('attemptUserSignIn', this.handleAttemptUserSignIn);
         bus.$on('attemptUserSignOut', this.handleAttemptUserSignOut);
         bus.$on('forceArticleReload', this.loadAllArticleRecordsFromServer);
+        bus.$on('randomUnreadArticleRequest', this.handleRandomUnreadArticleRequest);
         this.loadAllArticleRecordsFromServer();
     },
 };

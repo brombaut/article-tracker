@@ -17,4 +17,4 @@ Below is a list of features/functionality that I think would be worth implementi
 - [ ] Automate Scraping Title from Article
 - [ ] Add a N Minute Read field, automate scraping that aswell
 - [x] Refresh Button
-- [ ] 'I'm feeling lucky' - Random unread button
+- [x] 'I'm feeling lucky' - Random unread button
