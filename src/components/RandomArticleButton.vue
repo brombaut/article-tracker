@@ -21,7 +21,6 @@ export default {
             bus.$emit('randomUnreadArticleRequest');
         },
         openRandomArticle(unreadArticleRecord) {
-            console.log('Random Article: ', unreadArticleRecord);
             window.open(unreadArticleRecord.url, '_blank').focus();
             bus.$emit('articleClicked', unreadArticleRecord);
         },
