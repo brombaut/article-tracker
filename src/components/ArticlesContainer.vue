@@ -171,6 +171,8 @@ export default {
             return array;
         },
         sortArray(array) {
+            let endElementsArray = [];
+            let arrayToSort = [...array];
             let sortFunction = this.sortByGeneralComparison;
             if (this.sort.attribute === 'created') {
                 sortFunction = this.sortBySecondsAttribute('createdAt');
@@ -178,7 +180,12 @@ export default {
             if (this.sort.attribute === 'lastClicked') {
                 sortFunction = this.sortBySecondsAttribute('lastClicked');
             }
-            return array.sort(sortFunction);
+            if (this.sort.attribute === 'minuteRead') {
+                arrayToSort = array.filter(a => a.minuteRead);
+                endElementsArray = array.filter(a => !a.minuteRead);
+            }
+            arrayToSort = arrayToSort.sort(sortFunction);
+            return [...arrayToSort, ...endElementsArray];
         },
         sortByGeneralComparison(a, b) {
             if (this.sort.type === 'ascending') {

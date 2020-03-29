@@ -2,7 +2,7 @@
   <table id='articles-table'>
       <thead>
             <tr class=table-header>
-                <th colspan="5">Article Records</th>
+                <th colspan="6">Article Records</th>
             </tr>
             <tr class='column-headers'>
                 <!-- Created -->
@@ -54,6 +54,24 @@
                             <i
                                 :class="{'material-icons': true, 'selectedSort': sortString === 'title-descending' }"
                                 @click="() => setSortType('title', 'descending')">
+                                arrow_drop_down
+                            </i>
+                        </div>
+                    </div>
+                </th>
+                <!-- Minute Read -->
+                <th class="minute-read-column">
+                    <div class='column-headers-primary'>
+                        <div class='column-header-title'>Minute Read</div>
+                        <div class='column-header-sort-icons'>
+                            <i
+                                :class="{'material-icons': true, 'selectedSort': sortString === 'minuteRead-ascending' }"
+                                @click="() => setSortType('minuteRead', 'ascending')">
+                                arrow_drop_up
+                            </i>
+                            <i
+                                :class="{'material-icons': true, 'selectedSort': sortString === 'minuteRead-descending' }"
+                                @click="() => setSortType('minuteRead', 'descending')">
                                 arrow_drop_down
                             </i>
                         </div>
@@ -121,6 +139,9 @@
                         placeholder="Filter Title..."
                         v-model="filterTitle" />
                 </th>
+                <!-- Minute Read -->
+                <th>
+                </th>
                 <!-- Url -->
                 <th>
                     <input
@@ -148,6 +169,7 @@
                 <td>{{ row.createdAt.seconds | formatEpochAsDate}}</td>
                 <td>{{ row.lastClicked.seconds | formatEpochAsDate}}</td>
                 <td><b>{{ row.title }}</b></td>
+                <td class="minute-read-column">{{ row.minuteRead ? `${row.minuteRead} min read` : '' }}</td>
                 <td class="url-column">
                     <a
                         :href="row.url"
@@ -369,6 +391,10 @@ export default {
 
         .articleNotRead {
             color: #800c0c;
+        }
+
+        .minute-read-column {
+            text-align: center;
         }
 
         .url-column {
