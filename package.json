@@ -53,6 +53,7 @@
             "no-plusplus": 0,
             "no-useless-return": 0,
             "no-unreachable": 0,
+            "no-return-assign": 0,
             "max-len": [
                 "warn",
                 400
