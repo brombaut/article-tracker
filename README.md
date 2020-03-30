@@ -16,9 +16,12 @@ Below is a list of features/functionality that I think would be worth implementi
 - [x] Add a 'N Minute Read' field, automate scraping that aswell
 - [x] Refresh button - useful if I want to quickly hit the DB for any updates that I might have made on another computer
 - [x] 'I'm feeling lucky' - Open random unread article button
-- [ ] [LAST MAJOR FEATURE] Scrape tags on articles (include colours and link to dev.to tag. Clicking the tag takes you to the dev.to site with that taf filter applied) 
+- [x] [LAST MAJOR FEATURE] Scrape tags on articles (include colours and link to dev.to tag. Clicking the tag takes you to the dev.to site with that taf filter applied) 
 
 ## Future Work
 - [ ] Click Count
 - [ ] Edit Records
 - [ ] Filter on tags
+- [ ] Investigate whether CORS anywhere is needed
+- [ ] Refactor the article container and article table components. They've grown too much
+- [ ] Write script to auto scrape tags and title for all existing articles that don't have them
