@@ -303,6 +303,13 @@ export default {
         padding: 8px;
     }
 
+    .tags-column {
+        width: 200px;
+    }
+    .url-column {
+        width: 72px;
+    }
+
     thead {
         tr.table-header {
             background-color: $primary;
@@ -424,7 +431,8 @@ export default {
 
             .tags-container {
                 display: flex;
-                flex-direction: column;
+                flex-direction: row;
+                flex-wrap: wrap;
 
                 .article-tag {
                     border-radius: 4px;
