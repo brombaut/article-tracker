@@ -2,7 +2,7 @@
   <table id='articles-table'>
       <thead>
             <tr class=table-header>
-                <th colspan="6">Article Records</th>
+                <th colspan="7">Article Records</th>
             </tr>
             <tr class='column-headers'>
                 <!-- Created -->
@@ -77,6 +77,12 @@
                         </div>
                     </div>
                 </th>
+                <!-- Tags -->
+                <th class="tags-column">
+                    <div class='column-headers-primary'>
+                        <div class='column-header-title'>Tags</div>
+                    </div>
+                </th>
                 <!-- URL -->
                 <th class="url-column">
                     <div class='column-headers-primary'>
@@ -142,6 +148,9 @@
                 <!-- Minute Read -->
                 <th>
                 </th>
+                <!-- Tags -->
+                <th>
+                </th>
                 <!-- Url -->
                 <th>
                     <input
@@ -170,6 +179,20 @@
                 <td>{{ row.lastClicked.seconds | formatEpochAsDate}}</td>
                 <td><b>{{ row.title }}</b></td>
                 <td class="minute-read-column">{{ row.minuteRead ? `${row.minuteRead} min read` : '' }}</td>
+                <td class='tags-column'>
+                    <div class='tags-container'>
+                        <a
+                            v-for='tag in row.tags'
+                            :key='tag.name'
+                            class='article-tag'
+                            :href='tag.href'
+                            target="_blank"
+                            @click.stop="() => {}"
+                            :style='tag'>
+                            {{ tag.name }}
+                        </a>
+                    </div>
+                </td>
                 <td class="url-column">
                     <a
                         :href="row.url"
@@ -375,6 +398,10 @@ export default {
             cursor: pointer;
             background-color: $secondaryBrightest;
 
+            td {
+                border: 1px solid $secondary;
+            }
+
             .articleRead {
                 background-color: $secondaryBrightest;
             }
@@ -385,7 +412,6 @@ export default {
         }
 
         .articleRead {
-            // background-color: $secondary;
             color: $primary;
         }
 
@@ -393,13 +419,38 @@ export default {
             color: #800c0c;
         }
 
+        .tags-column {
+            padding: 8px;
+
+            .tags-container {
+                display: flex;
+                flex-direction: column;
+
+                .article-tag {
+                    border-radius: 4px;
+                    padding: 4px;
+                    background: #d6d9e0;
+                    color: #606570;
+                    margin: 4px;
+                    font-size: 14px;
+                    transition: 0.3s;
+                    text-decoration: none;
+
+                    &:hover {
+                        cursor: pointer;
+                        background: $primary !important;
+                        color: $secondary !important;
+                    }
+                }
+            }
+        }
+
         .minute-read-column {
             text-align: center;
         }
 
         .url-column {
-            display: flex;
-            justify-content: center;
+            text-align: center;
 
             i {
                 color: $primary;
