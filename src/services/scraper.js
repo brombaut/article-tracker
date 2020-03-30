@@ -2,31 +2,83 @@ import axios from 'axios';
 
 const cheerio = require('cheerio');
 
+const devToBaseUrl = 'https://dev.to';
 const corsPrefix = 'https://cors-anywhere.herokuapp.com/';
 
 function buildArticleInformationFromHtml(html) {
-    let articleTitle = null;
-    let minuteRead = null;
     const $ = buildHtmlTree(html);
-    try {
-        articleTitle = $('#main-title').find('h1').text().trim();
-    } catch {
-        console.error('Could not parse article title string');
-    }
-    try {
-        const minuteReadString = $('#main-title').find('h3').find('.published-at').text();
-        [minuteRead] = minuteReadString.match(/\d+/g).map(Number);
-    } catch {
-        console.error('Could not parse minute read string');
-    }
+    const mainTitleNode = selectMainTitleNode($);
+    const articleTitle = scrapeArticleTItle($, mainTitleNode);
+    const minuteRead = scrapeMinuteRead($, mainTitleNode);
+    const tags = scrapeTags($, mainTitleNode);
     return Promise.resolve({
         articleTitle,
         minuteRead,
+        tags,
     });
 }
 
 function buildHtmlTree(htmlString) {
     return cheerio.load(htmlString);
+}
+
+function selectMainTitleNode($) {
+    return $('#main-title');
+}
+
+function scrapeArticleTItle($, mainTitleNode) {
+    let articleTitle = null;
+    try {
+        articleTitle = $(mainTitleNode).find('h1').text().trim();
+    } catch {
+        console.error('Could not parse article title string');
+    }
+    return articleTitle;
+}
+
+function scrapeMinuteRead($, mainTitleNode) {
+    let minuteRead = null;
+    try {
+        const minuteReadString = $(mainTitleNode).find('h3').find('.published-at').text();
+        [minuteRead] = minuteReadString.match(/\d+/g).map(Number);
+    } catch {
+        console.error('Could not parse minute read string');
+    }
+    return minuteRead;
+}
+
+function scrapeTags($, mainTitleNode) {
+    const tags = [];
+    try {
+        const tagNodes = $(mainTitleNode).find('.tags').find('a');
+        tagNodes.each((i, node) => {
+            const name = $(node).text();
+            const href = `${devToBaseUrl}${$(node).attr('href')}`;
+            const stylesString = $(node).attr('style');
+            const stylesArray = stylesString.split(';');
+            let color = null;
+            let backgroundColor = null;
+            stylesArray.forEach(styleString => {
+                const [name, value] = styleString.split(':');
+                if (name === 'color') {
+                    color = value;
+                }
+                if (name === 'background-color') {
+                    backgroundColor = value;
+                }
+            });
+            const tagObject = {
+                name,
+                href,
+                color,
+                backgroundColor,
+            };
+            tags.push(tagObject);
+        });
+    } catch {
+        console.error('Could not scrape tags data');
+    }
+    return tags;
 }
 
 export default {

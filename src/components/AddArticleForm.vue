@@ -1,7 +1,7 @@
 <template>
     <form id='add-article-form' autocomplete="off">
         <h2>New Article Record</h2>
-        <p>For dev.to articles, just enter the URL, and I'll scrape the article's title and minute read fields.</p>
+        <p>For dev.to articles, just enter the URL, and I'll scrape the article's 'Title' and 'Minute Read' fields.</p>
         <div class='form-element'>
             <label for="article-url">URL:</label>
             <input
@@ -87,23 +87,25 @@ export default {
                 title: this.articleTitle,
                 url: this.articleUrl,
                 read: this.articleRead,
+                minuteRead: null,
+                tags: [],
             };
             bus.$emit('addArticleFormSubmitted', article);
         },
         attemptArticleInformationScrape() {
             scraper.scrapeArticleInformation(this.articleUrl).then(scrapedArticleInfo => {
+                this.articleTitle = scrapedArticleInfo.articleTitle;
+                this.validateTitle();
                 if (!scrapedArticleInfo.articleTitle) {
-                    this.validateTitle();
                     this.setIsNotSubmitting();
                     return;
                 }
-                this.articleTitle = scrapedArticleInfo.articleTitle;
-                this.validateTitle();
                 const article = {
                     title: this.articleTitle,
                     url: this.articleUrl,
                     read: this.articleRead,
                     minuteRead: scrapedArticleInfo.minuteRead,
+                    tags: scrapedArticleInfo.tags,
                 };
                 bus.$emit('addArticleFormSubmitted', article);
             });
