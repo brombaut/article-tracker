@@ -315,6 +315,10 @@ export default {
         padding: 8px;
     }
 
+    .title-column {
+        max-width: 500px;
+    }
+
     .tags-column {
         width: 200px;
     }
