@@ -2,7 +2,7 @@
   <table id='articles-table'>
       <thead>
             <tr class=table-header>
-                <th colspan="7">Article Records</th>
+                <th colspan="7">{{ tableTitle }}</th>
             </tr>
             <tr class='column-headers'>
                 <!-- Created -->
@@ -236,6 +236,18 @@ export default {
             date.setUTCSeconds(epoch);
             const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+        },
+    },
+    computed: {
+        tableTitle() {
+            switch (this.filterRead) {
+            case 'unread':
+                return 'Unread Articles';
+            case 'read':
+                return 'Read Articles';
+            default:
+                return 'All Articles';
+            }
         },
     },
     methods: {

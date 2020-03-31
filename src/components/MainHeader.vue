@@ -42,6 +42,7 @@ header {
     width: 100%;
     top: 0;
     z-index: 99;
+    box-shadow: 0px 2px 10px 0px $secondary;
 
     .radar-logo {
         height: 60px;
