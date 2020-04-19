@@ -306,7 +306,7 @@ export default {
 <style lang='scss'>
 #articles-table {
     border-collapse: collapse;
-    width: 100%;
+    max-width: 1600px;
     user-select: none;
 
     td, th {
@@ -316,12 +316,13 @@ export default {
     }
 
     .title-column {
-        max-width: 500px;
+        width: 550px;
     }
 
     .tags-column {
-        width: 200px;
+        width: 220px;
     }
+
     .url-column {
         width: 72px;
     }
