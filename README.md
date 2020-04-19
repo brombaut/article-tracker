@@ -25,3 +25,4 @@ Below is a list of features/functionality that I think would be worth implementi
 - [ ] Investigate whether CORS anywhere is needed
 - [ ] Refactor the article container and article table components. They've grown too much
 - [ ] Write script to auto scrape tags and title for all existing articles that don't have them
+- [ ] Most popular tags
