@@ -40,21 +40,21 @@ export default {
         },
         pastWeekData() {
             const secondsDate = this.getSecondsFromCurrentDateMinusDays(7);
-            const pastMonthRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
+            const pastWeekRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
             return {
                 title: 'Past Week',
-                primaryValue: this.readArticlesCount(pastMonthRecords),
-                secondaryValue: this.unreadArticlesCount(pastMonthRecords),
+                primaryValue: this.readArticlesCount(pastWeekRecords),
+                secondaryValue: this.unreadArticlesCount(pastWeekRecords),
             };
         },
         readTodayData() {
             const secondsDate = this.getStartOfTodaySeconds();
-            const pastMonthRecords = this.getArticlesLastClickedAfterSeconds(secondsDate);
-            const readToday = this.readArticlesCount(pastMonthRecords) > 0;
+            const pastDayRecords = this.getArticlesLastClickedAfterSeconds(secondsDate);
+            const readToday = this.readArticlesCount(pastDayRecords) > 0;
             return {
                 title: 'Read Today',
-                primaryValue: readToday,
-                secondaryValue: !readToday,
+                primaryValue: this.readArticlesCount(pastDayRecords),
+                secondaryValue: this.unreadArticlesCount(pastDayRecords),
             };
         },
     },
