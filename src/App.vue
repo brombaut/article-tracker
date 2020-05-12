@@ -35,7 +35,6 @@ export default {
     },
     methods: {
         handleWindowResize() {
-            console.log('Handle');
             this.screenIsTooSmall = window.innerWidth < 1300;
         },
     },
