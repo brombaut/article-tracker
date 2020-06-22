@@ -39,10 +39,15 @@ function scrapeArticleTItle($, mainTitleNode) {
 function scrapeMinuteRead($, mainTitleNode) {
   let minuteRead = null;
   try {
-    const minuteReadString = $(mainTitleNode).find('time').next().text(); // Get next sibling
-    [minuteRead] = minuteReadString.match(/\d+/g).map(Number);
-  } catch {
-    console.error('Could not parse minute read string');
+    const timeSiblings = $(mainTitleNode).find('time').siblings();
+    timeSiblings.each((i, node) => {
+      const nodeText = $(node).text();
+      if (nodeText.includes('min read')) {
+        [minuteRead] = nodeText.match(/\d+/g).map(Number);
+      }
+    });
+  } catch (e) {
+    console.error(e);
   }
   return minuteRead;
 }
