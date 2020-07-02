@@ -1,8 +1,6 @@
 import * as firebase from 'firebase';
 import firebaseConf from './firebaseConfig';
 
-console.log(process.env);
-
 const firebaseConfig = firebaseConf;
 
 const app = firebase.initializeApp(firebaseConfig);
