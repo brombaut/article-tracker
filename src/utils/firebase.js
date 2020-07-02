@@ -1,5 +1,7 @@
 import * as firebase from 'firebase';
-import firebaseConf from './firebaseConf.config';
+import firebaseConf from './firebaseConfig';
+
+console.log(process.env);
 
 const firebaseConfig = firebaseConf;
 
