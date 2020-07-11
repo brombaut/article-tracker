@@ -1,7 +1,7 @@
 <script>
 import { bus } from '@/main';
 import firebase from 'firebase';
-import { articlesCollection } from '@/utils/firebase';
+import { articlesCollection } from './firebase';
 
 
 firebase.auth().onAuthStateChanged(user => {

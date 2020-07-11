@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import AddArticleDropdown from '@/components/AddArticleDropdown.vue';
-import SignInDropdown from '@/components/SignInDropdown.vue';
-import RefreshButton from '@/components/RefreshButton.vue';
-import RandomArticleButton from '@/components/RandomArticleButton.vue';
+import AddArticleDropdown from './AddArticleDropdown.vue';
+import SignInDropdown from './SignInDropdown.vue';
+import RefreshButton from './RefreshButton.vue';
+import RandomArticleButton from './RandomArticleButton.vue';
 
 export default {
   name: 'MainHeader',

@@ -1,61 +1,46 @@
 <template>
-  <div id="sign-in-dropdown" :class="{'show-dropdown': showDropdown}">
-    <button v-if="!signedIn" class="dropbtn border-left" @click="handleDropwdownClicked()">
-      <i class="material-icons" style="font-size:60px">arrow_drop_down</i>Sign In
+  <div id="add-article-dropdown" :class="{'show-dropdown': showDropdown}">
+    <button class="dropbtn border-left" @click="handleDropwdownClicked()">
+      <i class="material-icons" style="font-size:60px">arrow_drop_down</i>Add Article
     </button>
-    <button v-else class="dropbtn border-left" @click="handleSignOutClicked()">
-      <i class="material-icons" style="font-size:40px">exit_to_app</i>Sign Out
-    </button>
-    <div v-if="!signedIn" class="dropdown-content">
-      <SignInForm />
+    <div class="dropdown-content">
+      <AddArticleForm />
     </div>
   </div>
 </template>
 
 <script>
 import { bus } from '@/main';
-import SignInForm from '@/components/SignInForm.vue';
+import AddArticleForm from './AddArticleForm.vue';
 
 export default {
-  name: 'SignInDropdown',
+  name: 'AddArticleDropdown',
   components: {
-    SignInForm,
+    AddArticleForm,
   },
   data() {
     return {
-      signedIn: false,
       showDropdown: false,
     };
   },
   methods: {
     handleDropwdownClicked() {
       this.showDropdown = !this.showDropdown;
-      bus.$emit('signInOpened');
+      bus.$emit('addArticleOpened');
     },
     closeDropdown() {
       this.showDropdown = false;
     },
-    handleSignInSuccess() {
-      this.signedIn = true;
-    },
-    handleSignOutSuccess() {
-      this.signedIn = false;
-    },
-    handleSignOutClicked() {
-      bus.$emit('attemptUserSignOut');
-    },
   },
   mounted() {
-    bus.$on('addArticleOpened', this.closeDropdown);
-    bus.$on('signInSuccess', this.handleSignInSuccess);
-    bus.$on('signOutSuccess', this.handleSignOutSuccess);
+    bus.$on('signInOpened', this.closeDropdown);
   },
 };
 </script>
 
 <style lang='scss'>
-#sign-in-dropdown {
-  // position: relative;
+#add-article-dropdown {
+  position: relative;
   display: inline-block;
   border-left: 1px solid $secondary;
 
@@ -86,14 +71,14 @@ export default {
   .dropdown-content {
     display: none;
     position: absolute;
-    right: 0px;
-    width: 400px;
+    right: 0;
+    width: 800px;
     padding-top: 20px;
     padding-bottom: 60px;
     padding-left: 40px;
     padding-right: 40px;
-    background-color: #e1fcf1;
-    color: #34495e;
+    background-color: $primaryLighter;
+    color: $secondary;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
   }

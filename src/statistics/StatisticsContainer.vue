@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ProgressGauge from '@/components/ProgressGauge.vue';
+import ProgressGauge from './ProgressGauge.vue';
 
 export default {
   name: 'StatisticsContainer',

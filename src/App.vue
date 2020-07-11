@@ -10,9 +10,9 @@
 </template>
 
 <script>
-import MainHeader from '@/components/MainHeader.vue';
-import ServerCommunication from '@/components/ServerCommunication.vue';
-import ArticlesContainer from '@/components/ArticlesContainer.vue';
+import MainHeader from './header/MainHeader.vue';
+import ServerCommunication from './server/ServerCommunication.vue';
+import ArticlesContainer from './table/ArticlesContainer.vue';
 
 
 export default {

@@ -32,7 +32,7 @@
 
 <script>
 import { bus } from '@/main';
-import scraper from '@/services/scraper';
+import scraper from '../scraper/scraper';
 
 export default {
   name: 'AddArticleForm',

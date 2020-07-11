@@ -55,8 +55,8 @@
 
 <script>
 import { bus } from '@/main';
-import ArticlesTable from '@/components/ArticlesTable.vue';
-import StatisticsContainer from '@/components/StatisticsContainer.vue';
+import ArticlesTable from './ArticlesTable.vue';
+import StatisticsContainer from '../statistics/StatisticsContainer.vue';
 
 export default {
   name: 'ArticlesContainer',
@@ -76,7 +76,7 @@ export default {
       },
       sort: {
         attribute: 'created',
-        type: 'descending',
+        type: 'ascending',
       },
       pagination: {
         pageNumber: 0,

@@ -215,12 +215,12 @@ export default {
   computed: {
     tableTitle() {
       switch (this.filterRead) {
-      case 'unread':
-        return 'Unread Articles';
-      case 'read':
-        return 'Read Articles';
-      default:
-        return 'All Articles';
+        case 'unread':
+          return 'Unread Articles';
+        case 'read':
+          return 'Read Articles';
+        default:
+          return 'All Articles';
       }
     },
   },
