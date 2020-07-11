@@ -44,7 +44,12 @@ export default {
         });
     },
     handleArticleOpened(clickedArticle) {
-      articlesCollection.where('url', '==', clickedArticle.url).get()
+      if (process.env.VUE_APP_ENV === 'develop') {
+        return;
+      }
+      articlesCollection
+        .where('url', '==', clickedArticle.url)
+        .get()
         .then(querySnapshot => {
           if (!firebase.auth().currentUser) {
             return;
