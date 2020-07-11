@@ -14,20 +14,20 @@
 
 <script>
 export default {
-  name: 'ProgressGauge',
+  name: "ProgressGauge",
   props: {
     gaugeData: Object,
   },
   computed: {
     parimeryValueLabel() {
-      if (typeof this.gaugeData.primaryValue === 'boolean') {
-        return this.gaugeData.primaryValue ? 'Yes' : 'No';
+      if (typeof this.gaugeData.primaryValue === "boolean") {
+        return this.gaugeData.primaryValue ? "Yes" : "No";
       }
       return this.gaugeData.primaryValue;
     },
     secondaryValueLabel() {
-      if (typeof this.gaugeData.secondaryValue === 'boolean') {
-        return this.gaugeData.secondaryValue ? 'Yes' : 'No';
+      if (typeof this.gaugeData.secondaryValue === "boolean") {
+        return this.gaugeData.secondaryValue ? "Yes" : "No";
       }
       return this.gaugeData.secondaryValue;
     },
@@ -40,13 +40,13 @@ export default {
   methods: {
     setProgressBar() {
       let percent;
-      if (typeof this.gaugeData.primaryValue === 'boolean' && typeof this.gaugeData.secondaryValue === 'boolean') {
+      if (typeof this.gaugeData.primaryValue === "boolean" && typeof this.gaugeData.secondaryValue === "boolean") {
         percent = this.gaugeData.primaryValue ? 1 : 0;
       } else {
         percent = this.gaugeData.primaryValue / (this.gaugeData.primaryValue + this.gaugeData.secondaryValue);
       }
       const rotate = Math.floor(180 * percent);
-      const progresEl = this.$el.querySelector('.semi-circle--mask');
+      const progresEl = this.$el.querySelector(".semi-circle--mask");
       progresEl.style.transform = `rotate(${rotate}deg) translate3d(0,0,0)`;
     },
   },

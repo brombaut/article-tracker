@@ -54,12 +54,12 @@
 </template>
 
 <script>
-import { bus } from '@/main';
-import ArticlesTable from './ArticlesTable.vue';
-import StatisticsContainer from '../statistics/StatisticsContainer.vue';
+import { bus } from "@/main";
+import ArticlesTable from "./ArticlesTable.vue";
+import StatisticsContainer from "../statistics/StatisticsContainer.vue";
 
 export default {
-  name: 'ArticlesContainer',
+  name: "ArticlesContainer",
   components: {
     ArticlesTable,
     StatisticsContainer,
@@ -68,15 +68,15 @@ export default {
     return {
       articles: [],
       filters: {
-        created: '',
-        lastClicked: '',
-        title: '',
-        url: '',
-        read: 'unread',
+        created: "",
+        lastClicked: "",
+        title: "",
+        url: "",
+        read: "unread",
       },
       sort: {
-        attribute: 'created',
-        type: 'ascending',
+        attribute: "created",
+        type: "ascending",
       },
       pagination: {
         pageNumber: 0,
@@ -123,11 +123,11 @@ export default {
     },
     convertSecondsEpochToDateFormatted(second) {
       if (!second) {
-        return '';
+        return "";
       }
       const date = new Date(0);
       date.setUTCSeconds(second);
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
     },
     filterArray(array) {
@@ -144,7 +144,7 @@ export default {
         array = array.filter(record => record.url.toString().toLowerCase().includes(this.filters.url.toString().toLowerCase()));
       }
       if (this.filters.read) {
-        const readShouldBe = this.filters.read === 'read';
+        const readShouldBe = this.filters.read === "read";
         array = array.filter(record => record.read === readShouldBe);
       }
       return array;
@@ -153,13 +153,13 @@ export default {
       let endElementsArray = [];
       let arrayToSort = [...array];
       let sortFunction = this.sortByGeneralComparison;
-      if (this.sort.attribute === 'created') {
-        sortFunction = this.sortBySecondsAttribute('createdAt');
+      if (this.sort.attribute === "created") {
+        sortFunction = this.sortBySecondsAttribute("createdAt");
       }
-      if (this.sort.attribute === 'lastClicked') {
-        sortFunction = this.sortBySecondsAttribute('lastClicked');
+      if (this.sort.attribute === "lastClicked") {
+        sortFunction = this.sortBySecondsAttribute("lastClicked");
       }
-      if (this.sort.attribute === 'minuteRead') {
+      if (this.sort.attribute === "minuteRead") {
         arrayToSort = array.filter(a => a.minuteRead);
         endElementsArray = array.filter(a => !a.minuteRead);
       }
@@ -167,7 +167,7 @@ export default {
       return [...arrayToSort, ...endElementsArray];
     },
     sortByGeneralComparison(a, b) {
-      if (this.sort.type === 'ascending') {
+      if (this.sort.type === "ascending") {
         if (a[this.sort.attribute] >= b[this.sort.attribute]) {
           return 1;
         }
@@ -180,7 +180,7 @@ export default {
     },
     sortBySecondsAttribute(attribute) {
       return (a, b) => {
-        if (this.sort.type === 'ascending') {
+        if (this.sort.type === "ascending") {
           if (a[attribute].seconds >= b[attribute].seconds) {
             return 1;
           }
@@ -222,10 +222,10 @@ export default {
     },
   },
   mounted() {
-    bus.$on('allArticlesFromServer', this.handleAllArticlesFromServer);
-    bus.$on('filterUpdated', this.handleFilterUpdated);
-    bus.$on('sortUpdated', this.handleSortUpdated);
-    bus.$emit('forceArticleReload');
+    bus.$on("allArticlesFromServer", this.handleAllArticlesFromServer);
+    bus.$on("filterUpdated", this.handleFilterUpdated);
+    bus.$on("sortUpdated", this.handleSortUpdated);
+    bus.$emit("forceArticleReload");
   },
 };
 </script>

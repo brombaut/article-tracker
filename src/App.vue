@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    <span v-show="screenIsTooSmall" id="mobile-coming-soon">Mobile version not available</span>
-    <span id="desktop-wrapper" v-show="!screenIsTooSmall">
+    <span id="desktop-wrapper">
       <MainHeader />
       <ArticlesContainer />
       <ServerCommunication />
@@ -10,31 +9,17 @@
 </template>
 
 <script>
-import MainHeader from './header/MainHeader.vue';
-import ServerCommunication from './server/ServerCommunication.vue';
-import ArticlesContainer from './table/ArticlesContainer.vue';
+import MainHeader from "./header/MainHeader.vue";
+import ServerCommunication from "./server/ServerCommunication.vue";
+import ArticlesContainer from "./table/ArticlesContainer.vue";
 
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     MainHeader,
     ServerCommunication,
     ArticlesContainer,
-  },
-  data() {
-    return {
-      screenIsTooSmall: false,
-    };
-  },
-  methods: {
-    handleWindowResize() {
-      this.screenIsTooSmall = window.innerWidth < 1300;
-    },
-  },
-  mounted() {
-    this.handleWindowResize();
-    window.addEventListener('resize', this.handleWindowResize);
   },
 };
 </script>
@@ -64,15 +49,6 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-  }
-
-  #mobile-coming-soon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    font-size: 3rem;
-    height: 100%;
   }
 }
 </style>

@@ -31,15 +31,15 @@
 </template>
 
 <script>
-import { bus } from '@/main';
-import scraper from '../scraper/scraper';
+import { bus } from "@/main";
+import scraper from "../scraper/scraper";
 
 export default {
-  name: 'AddArticleForm',
+  name: "AddArticleForm",
   data() {
     return {
-      articleTitle: '',
-      articleUrl: '',
+      articleTitle: "",
+      articleUrl: "",
       articleRead: false,
       isSubmitting: false,
       showOnlyBenMessage: false,
@@ -73,7 +73,7 @@ export default {
         minuteRead: null,
         tags: [],
       };
-      bus.$emit('addArticleFormSubmitted', article);
+      bus.$emit("addArticleFormSubmitted", article);
     },
     attemptArticleInformationScrape() {
       scraper.scrapeArticleInformation(this.articleUrl).then(scrapedArticleInfo => {
@@ -90,50 +90,50 @@ export default {
           minuteRead: scrapedArticleInfo.minuteRead,
           tags: scrapedArticleInfo.tags,
         };
-        bus.$emit('addArticleFormSubmitted', article);
+        bus.$emit("addArticleFormSubmitted", article);
       });
     },
     validateUrl() {
-      const urlInput = document.querySelector('#article-url');
+      const urlInput = document.querySelector("#article-url");
       if (!this.articleUrl) {
-        urlInput.classList.add('red-border');
+        urlInput.classList.add("red-border");
         return true;
       }
-      urlInput.classList.remove('red-border');
+      urlInput.classList.remove("red-border");
       return false;
     },
     validateTitle() {
-      const titleInput = document.querySelector('#article-title');
+      const titleInput = document.querySelector("#article-title");
       if (!this.articleTitle) {
-        titleInput.classList.add('red-border');
+        titleInput.classList.add("red-border");
         return true;
       }
-      titleInput.classList.remove('red-border');
+      titleInput.classList.remove("red-border");
       return false;
     },
     setIsSubmitting() {
       this.isSubmitting = true;
-      document.querySelector('#article-title').disabled = true;
-      document.querySelector('#article-url').disabled = true;
-      document.querySelector('#has-been-read').disabled = true;
-      document.querySelector('#add-article-submit-button').disabled = true;
+      document.querySelector("#article-title").disabled = true;
+      document.querySelector("#article-url").disabled = true;
+      document.querySelector("#has-been-read").disabled = true;
+      document.querySelector("#add-article-submit-button").disabled = true;
     },
     setIsNotSubmitting() {
       this.isSubmitting = false;
-      document.querySelector('#article-title').disabled = false;
-      document.querySelector('#article-url').disabled = false;
-      document.querySelector('#has-been-read').disabled = false;
-      document.querySelector('#add-article-submit-button').disabled = false;
+      document.querySelector("#article-title").disabled = false;
+      document.querySelector("#article-url").disabled = false;
+      document.querySelector("#has-been-read").disabled = false;
+      document.querySelector("#add-article-submit-button").disabled = false;
     },
     resetForm() {
       this.isSubmitting = false;
-      this.articleTitle = '';
-      this.articleUrl = '';
+      this.articleTitle = "";
+      this.articleUrl = "";
       this.articleRead = false;
-      document.querySelector('#article-title').disabled = false;
-      document.querySelector('#article-url').disabled = false;
-      document.querySelector('#has-been-read').disabled = false;
-      document.querySelector('#add-article-submit-button').disabled = false;
+      document.querySelector("#article-title").disabled = false;
+      document.querySelector("#article-url").disabled = false;
+      document.querySelector("#has-been-read").disabled = false;
+      document.querySelector("#add-article-submit-button").disabled = false;
     },
     setShowOnlyBenMessage(val) {
       this.showOnlyBenMessage = val;
@@ -141,16 +141,16 @@ export default {
     handleNotBenError() {
       this.setShowOnlyBenMessage(true);
       this.isSubmitting = false;
-      document.querySelector('#article-title').disabled = false;
-      document.querySelector('#article-url').disabled = false;
-      document.querySelector('#has-been-read').disabled = false;
-      document.querySelector('#add-article-submit-button').disabled = false;
+      document.querySelector("#article-title").disabled = false;
+      document.querySelector("#article-url").disabled = false;
+      document.querySelector("#has-been-read").disabled = false;
+      document.querySelector("#add-article-submit-button").disabled = false;
       setTimeout(() => this.setShowOnlyBenMessage(false), 5000);
     },
   },
   mounted() {
-    bus.$on('clearArticleForm', this.resetForm);
-    bus.$on('addNewArticleError', this.handleNotBenError);
+    bus.$on("clearArticleForm", this.resetForm);
+    bus.$on("addNewArticleError", this.handleNotBenError);
   },
 };
 </script>

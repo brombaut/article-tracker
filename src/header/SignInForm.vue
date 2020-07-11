@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import { bus } from '@/main';
+import { bus } from "@/main";
 
 export default {
-  name: 'SignInForm',
+  name: "SignInForm",
   data() {
     return {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
       isSubmitting: false,
       showMessage: false,
     };
@@ -41,19 +41,19 @@ export default {
       e.preventDefault();
       this.showMessage = false;
       let stop = false;
-      const emailInput = document.querySelector('#email');
-      const passwordInput = document.querySelector('#password');
+      const emailInput = document.querySelector("#email");
+      const passwordInput = document.querySelector("#password");
       if (!this.email) {
         stop = true;
-        emailInput.classList.add('red-border');
+        emailInput.classList.add("red-border");
       } else {
-        emailInput.classList.remove('red-border');
+        emailInput.classList.remove("red-border");
       }
       if (!this.password) {
         stop = true;
-        passwordInput.classList.add('red-border');
+        passwordInput.classList.add("red-border");
       } else {
-        passwordInput.classList.remove('red-border');
+        passwordInput.classList.remove("red-border");
       }
       if (stop) {
         return;
@@ -63,33 +63,33 @@ export default {
         email: this.email,
         password: this.password,
       };
-      bus.$emit('attemptUserSignIn', user);
+      bus.$emit("attemptUserSignIn", user);
     },
     setIsSubmitting() {
       this.isSubmitting = true;
-      document.querySelector('#email').disabled = true;
-      document.querySelector('#password').disabled = true;
-      document.querySelector('#sign-in-submit-button').disabled = true;
+      document.querySelector("#email").disabled = true;
+      document.querySelector("#password").disabled = true;
+      document.querySelector("#sign-in-submit-button").disabled = true;
     },
     resetForm() {
       this.isSubmitting = false;
-      this.email = '';
-      this.password = '';
-      document.querySelector('#email').disabled = false;
-      document.querySelector('#password').disabled = false;
-      document.querySelector('#sign-in-submit-button').disabled = false;
+      this.email = "";
+      this.password = "";
+      document.querySelector("#email").disabled = false;
+      document.querySelector("#password").disabled = false;
+      document.querySelector("#sign-in-submit-button").disabled = false;
     },
     handleSignInError() {
       this.isSubmitting = false;
       this.showMessage = true;
-      document.querySelector('#email').disabled = false;
-      document.querySelector('#password').disabled = false;
-      document.querySelector('#sign-in-submit-button').disabled = false;
+      document.querySelector("#email").disabled = false;
+      document.querySelector("#password").disabled = false;
+      document.querySelector("#sign-in-submit-button").disabled = false;
     },
   },
   mounted() {
-    bus.$on('signInError', this.handleSignInError);
-    bus.$on('signInSuccess', this.resetForm);
+    bus.$on("signInError", this.handleSignInError);
+    bus.$on("signInSuccess", this.resetForm);
   },
 };
 </script>

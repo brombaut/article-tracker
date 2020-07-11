@@ -8,21 +8,21 @@
 </template>
 
 <script>
-import { bus } from '@/main';
+import { bus } from "@/main";
 
 export default {
-  name: 'RandomArticleButton',
+  name: "RandomArticleButton",
   methods: {
     handleRandomArticleClicked() {
-      bus.$emit('randomUnreadArticleRequest');
+      bus.$emit("randomUnreadArticleRequest");
     },
     openRandomArticle(unreadArticleRecord) {
-      window.open(unreadArticleRecord.url, '_blank').focus();
-      bus.$emit('articleClicked', unreadArticleRecord);
+      window.open(unreadArticleRecord.url, "_blank").focus();
+      bus.$emit("articleClicked", unreadArticleRecord);
     },
   },
   mounted() {
-    bus.$on('randomUnreadArticleEmit', this.openRandomArticle);
+    bus.$on("randomUnreadArticleEmit", this.openRandomArticle);
   },
 };
 </script>

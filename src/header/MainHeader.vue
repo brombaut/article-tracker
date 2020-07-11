@@ -13,13 +13,13 @@
 </template>
 
 <script>
-import AddArticleDropdown from './AddArticleDropdown.vue';
-import SignInDropdown from './SignInDropdown.vue';
-import RefreshButton from './RefreshButton.vue';
-import RandomArticleButton from './RandomArticleButton.vue';
+import AddArticleDropdown from "./AddArticleDropdown.vue";
+import SignInDropdown from "./SignInDropdown.vue";
+import RefreshButton from "./RefreshButton.vue";
+import RandomArticleButton from "./RandomArticleButton.vue";
 
 export default {
-  name: 'MainHeader',
+  name: "MainHeader",
   components: {
     AddArticleDropdown,
     SignInDropdown,

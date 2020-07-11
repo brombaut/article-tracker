@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import { bus } from '@/main';
+import { bus } from "@/main";
 
 export default {
-  name: 'RefreshButton',
+  name: "RefreshButton",
   data() {
     return {
       isRefreshing: false,
@@ -20,11 +20,11 @@ export default {
   methods: {
     handleRefreshClicked() {
       this.isRefreshing = true;
-      bus.$emit('forceArticleReload');
+      bus.$emit("forceArticleReload");
     },
   },
   mounted() {
-    bus.$on('allArticlesFromServer', () => this.isRefreshing = false);
+    bus.$on("allArticlesFromServer", () => this.isRefreshing = false);
   },
 };
 </script>

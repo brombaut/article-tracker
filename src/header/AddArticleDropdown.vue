@@ -10,11 +10,11 @@
 </template>
 
 <script>
-import { bus } from '@/main';
-import AddArticleForm from './AddArticleForm.vue';
+import { bus } from "@/main";
+import AddArticleForm from "./AddArticleForm.vue";
 
 export default {
-  name: 'AddArticleDropdown',
+  name: "AddArticleDropdown",
   components: {
     AddArticleForm,
   },
@@ -26,14 +26,14 @@ export default {
   methods: {
     handleDropwdownClicked() {
       this.showDropdown = !this.showDropdown;
-      bus.$emit('addArticleOpened');
+      bus.$emit("addArticleOpened");
     },
     closeDropdown() {
       this.showDropdown = false;
     },
   },
   mounted() {
-    bus.$on('signInOpened', this.closeDropdown);
+    bus.$on("signInOpened", this.closeDropdown);
   },
 };
 </script>

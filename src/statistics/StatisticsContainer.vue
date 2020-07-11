@@ -11,10 +11,10 @@
 </template>
 
 <script>
-import ProgressGauge from './ProgressGauge.vue';
+import ProgressGauge from "./ProgressGauge.vue";
 
 export default {
-  name: 'StatisticsContainer',
+  name: "StatisticsContainer",
   components: {
     ProgressGauge,
   },
@@ -24,7 +24,7 @@ export default {
   computed: {
     allTimeData() {
       return {
-        title: 'All Time',
+        title: "All Time",
         primaryValue: this.readArticlesCount(this.articles),
         secondaryValue: this.unreadArticlesCount(this.articles),
       };
@@ -33,7 +33,7 @@ export default {
       const secondsDate = this.getSecondsFromCurrentDateMinusDays(30);
       const pastMonthRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
       return {
-        title: 'Past Month',
+        title: "Past Month",
         primaryValue: this.readArticlesCount(pastMonthRecords),
         secondaryValue: this.unreadArticlesCount(pastMonthRecords),
       };
@@ -42,7 +42,7 @@ export default {
       const secondsDate = this.getSecondsFromCurrentDateMinusDays(7);
       const pastWeekRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
       return {
-        title: 'Past Week',
+        title: "Past Week",
         primaryValue: this.readArticlesCount(pastWeekRecords),
         secondaryValue: this.unreadArticlesCount(pastWeekRecords),
       };
@@ -52,7 +52,7 @@ export default {
       const pastDayRecords = this.getArticlesLastClickedAfterSeconds(secondsDate);
       const readToday = this.readArticlesCount(pastDayRecords) > 0;
       return {
-        title: 'Read Today',
+        title: "Read Today",
         primaryValue: this.readArticlesCount(pastDayRecords),
         secondaryValue: this.unreadArticlesCount(pastDayRecords),
       };

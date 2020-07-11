@@ -5,108 +5,13 @@
         <th colspan="7">{{ tableTitle }}</th>
       </tr>
       <tr class="column-headers">
-        <!-- Created -->
-        <th>
-          <div class="column-headers-primary">
-            <div class="column-header-title">Created</div>
-            <div class="column-header-sort-icons">
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'created-ascending' }"
-                @click="() => setSortType('created', 'ascending')"
-              >arrow_drop_up</i>
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'created-descending' }"
-                @click="() => setSortType('created', 'descending')"
-              >arrow_drop_down</i>
-            </div>
-          </div>
-        </th>
-        <!-- Last Clicked -->
-        <th>
-          <div class="column-headers-primary">
-            <div class="column-header-title">Last Clicked</div>
-            <div class="column-header-sort-icons">
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'lastClicked-ascending' }"
-                @click="() => setSortType('lastClicked', 'ascending')"
-              >arrow_drop_up</i>
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'lastClicked-descending' }"
-                @click="() => setSortType('lastClicked', 'descending')"
-              >arrow_drop_down</i>
-            </div>
-          </div>
-        </th>
-        <!-- Title -->
-        <th class="title-column">
-          <div class="column-headers-primary">
-            <div class="column-header-title">Title</div>
-            <div class="column-header-sort-icons">
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'title-ascending' }"
-                @click="() => setSortType('title', 'ascending')"
-              >arrow_drop_up</i>
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'title-descending' }"
-                @click="() => setSortType('title', 'descending')"
-              >arrow_drop_down</i>
-            </div>
-          </div>
-        </th>
-        <!-- Minute Read -->
-        <th class="minute-read-column">
-          <div class="column-headers-primary">
-            <div class="column-header-title">Minute Read</div>
-            <div class="column-header-sort-icons">
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'minuteRead-ascending' }"
-                @click="() => setSortType('minuteRead', 'ascending')"
-              >arrow_drop_up</i>
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'minuteRead-descending' }"
-                @click="() => setSortType('minuteRead', 'descending')"
-              >arrow_drop_down</i>
-            </div>
-          </div>
-        </th>
-        <!-- Tags -->
-        <th class="tags-column">
-          <div class="column-headers-primary">
-            <div class="column-header-title">Tags</div>
-          </div>
-        </th>
-        <!-- URL -->
-        <th class="url-column">
-          <div class="column-headers-primary">
-            <div class="column-header-title">URL</div>
-            <div class="column-header-sort-icons">
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'url-ascending' }"
-                @click="() => setSortType('url', 'ascending')"
-              >arrow_drop_up</i>
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'url-descending' }"
-                @click="() => setSortType('url', 'descending')"
-              >arrow_drop_down</i>
-            </div>
-          </div>
-        </th>
-        <!-- Read -->
-        <th>
-          <div class="column-headers-primary">
-            <div class="column-header-title">Read</div>
-            <div class="column-header-sort-icons">
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'read-ascending' }"
-                @click="() => setSortType('read', 'ascending')"
-              >arrow_drop_up</i>
-              <i
-                :class="{'material-icons': true, 'selectedSort': sortString === 'read-descending' }"
-                @click="() => setSortType('read', 'descending')"
-              >arrow_drop_down</i>
-            </div>
-          </div>
-        </th>
+        <TableHeader
+          v-for="column in columns"
+          :key="column.key"
+          :column="column"
+          :sortString="sortString"
+          @sortButtonClicked="setSortType"
+        />
       </tr>
       <tr class="filter-headers">
         <!-- Created At -->
@@ -184,94 +89,128 @@
 </template>
 
 <script>
-import { bus } from '@/main';
+import { bus } from "@/main";
+import TableHeader from "./TableHeader";
 
 export default {
-  name: 'ArticlesTable',
+  name: "ArticlesTable",
   props: {
     rows: Array,
     sortString: String,
   },
+  components: {
+    TableHeader,
+  },
   data() {
     return {
-      filterCreated: '',
-      filterLastClicked: '',
-      filterTitle: '',
-      filterUrl: '',
-      filterRead: 'unread',
+      filterCreated: "",
+      filterLastClicked: "",
+      filterTitle: "",
+      filterUrl: "",
+      filterRead: "unread",
+      columns: [
+        {
+          title: "Created",
+          key: "created",
+        },
+        {
+          title: "Last Clicked",
+          key: "lastClicked",
+        },
+        {
+          title: "Title",
+          key: "title",
+        },
+        {
+          title: "Minute Read",
+          key: "minuteRead",
+        },
+        {
+          title: "Tags",
+          key: "tags",
+        },
+        {
+          title: "URL",
+          key: "url",
+        },
+        {
+          title: "Read",
+          key: "read",
+        },
+      ],
     };
   },
   filters: {
     formatEpochAsDate(epoch) {
       if (!epoch) {
-        return '';
+        return "";
       }
       const date = new Date(0);
       date.setUTCSeconds(epoch);
-      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
     },
   },
   computed: {
     tableTitle() {
       switch (this.filterRead) {
-        case 'unread':
-          return 'Unread Articles';
-        case 'read':
-          return 'Read Articles';
+        case "unread":
+          return "Unread Articles";
+        case "read":
+          return "Read Articles";
         default:
-          return 'All Articles';
+          return "All Articles";
       }
     },
   },
   methods: {
-    setSortType(attribute, type) {
+    setSortType({ attribute, type }) {
       const updateSortType = {
         attribute,
         type,
       };
-      bus.$emit('sortUpdated', updateSortType);
+      bus.$emit("sortUpdated", updateSortType);
     },
     handleRowClick(row) {
-      window.open(row.url, '_blank').focus();
-      bus.$emit('articleClicked', row);
+      window.open(row.url, "_blank").focus();
+      bus.$emit("articleClicked", row);
     },
   },
   watch: {
     filterCreated(newVal) {
       const filterUpdateObject = {
-        type: 'created',
+        type: "created",
         value: newVal,
       };
-      bus.$emit('filterUpdated', filterUpdateObject);
+      bus.$emit("filterUpdated", filterUpdateObject);
     },
     filterLastClicked(newVal) {
       const filterUpdateObject = {
-        type: 'created',
+        type: "created",
         value: newVal,
       };
-      bus.$emit('filterUpdated', filterUpdateObject);
+      bus.$emit("filterUpdated", filterUpdateObject);
     },
     filterTitle(newVal) {
       const filterUpdateObject = {
-        type: 'title',
+        type: "title",
         value: newVal,
       };
-      bus.$emit('filterUpdated', filterUpdateObject);
+      bus.$emit("filterUpdated", filterUpdateObject);
     },
     filterUrl(newVal) {
       const filterUpdateObject = {
-        type: 'url',
+        type: "url",
         value: newVal,
       };
-      bus.$emit('filterUpdated', filterUpdateObject);
+      bus.$emit("filterUpdated", filterUpdateObject);
     },
     filterRead(newVal) {
       const filterUpdateObject = {
-        type: 'read',
+        type: "read",
         value: newVal,
       };
-      bus.$emit('filterUpdated', filterUpdateObject);
+      bus.$emit("filterUpdated", filterUpdateObject);
     },
   },
 };
@@ -290,18 +229,6 @@ export default {
     padding: 8px;
   }
 
-  .title-column {
-    width: 550px;
-  }
-
-  .tags-column {
-    width: 220px;
-  }
-
-  .url-column {
-    width: 72px;
-  }
-
   thead {
     tr.table-header {
       background-color: $primary;
@@ -316,37 +243,6 @@ export default {
     tr.column-headers {
       background-color: $primary;
       color: $secondary;
-
-      .column-headers-primary {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-
-        .column-header-title {
-          font-size: 20px;
-          margin-right: 8px;
-        }
-
-        .column-header-sort-icons {
-          display: flex;
-          flex-direction: column;
-
-          i {
-            font-size: 32px;
-            margin: -6px;
-
-            &:hover {
-              cursor: pointer;
-              color: $primaryBrightest;
-            }
-          }
-
-          .selectedSort {
-            color: $primaryBrighter;
-          }
-        }
-      }
     }
     tr.filter-headers {
       background-color: $primaryLighter;

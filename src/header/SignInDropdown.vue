@@ -13,11 +13,11 @@
 </template>
 
 <script>
-import { bus } from '@/main';
-import SignInForm from './SignInForm.vue';
+import { bus } from "@/main";
+import SignInForm from "./SignInForm.vue";
 
 export default {
-  name: 'SignInDropdown',
+  name: "SignInDropdown",
   components: {
     SignInForm,
   },
@@ -30,7 +30,7 @@ export default {
   methods: {
     handleDropwdownClicked() {
       this.showDropdown = !this.showDropdown;
-      bus.$emit('signInOpened');
+      bus.$emit("signInOpened");
     },
     closeDropdown() {
       this.showDropdown = false;
@@ -42,13 +42,13 @@ export default {
       this.signedIn = false;
     },
     handleSignOutClicked() {
-      bus.$emit('attemptUserSignOut');
+      bus.$emit("attemptUserSignOut");
     },
   },
   mounted() {
-    bus.$on('addArticleOpened', this.closeDropdown);
-    bus.$on('signInSuccess', this.handleSignInSuccess);
-    bus.$on('signOutSuccess', this.handleSignOutSuccess);
+    bus.$on("addArticleOpened", this.closeDropdown);
+    bus.$on("signInSuccess", this.handleSignInSuccess);
+    bus.$on("signOutSuccess", this.handleSignOutSuccess);
   },
 };
 </script>

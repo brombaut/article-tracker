@@ -1,9 +1,9 @@
 module.exports = {
-  publicPath: '/article-tracker/',
+  publicPath: "/article-tracker/",
   css: {
     loaderOptions: {
       sass: {
-        prependData: '@import "@/styles/variables.scss";',
+        prependData: "@import \"@/styles/variables.scss\";",
       },
     },
   },
