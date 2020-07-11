@@ -14,43 +14,7 @@
         />
       </tr>
       <tr class="filter-headers">
-        <!-- Created At -->
-        <th>
-          <input
-            id="filter-created"
-            type="text"
-            placeholder="Filter Created..."
-            v-model="filterCreated"
-          />
-        </th>
-        <!-- Last Clicked -->
-        <th>
-          <input
-            id="filter-last-clicked"
-            type="text"
-            placeholder="Filter Last Clicked..."
-            v-model="filterLastClicked"
-          />
-        </th>
-        <!-- Title -->
-        <th>
-          <input id="filter-title" type="text" placeholder="Filter Title..." v-model="filterTitle" />
-        </th>
-        <!-- Minute Read -->
-        <th></th>
-        <!-- Tags -->
-        <th></th>
-        <!-- Url -->
-        <th>
-          <input id="filter-url" type="text" placeholder="Filter URL..." v-model="filterUrl" />
-        </th>
-        <th>
-          <select id="filter-read" v-model="filterRead">
-            <option value>All</option>
-            <option value="read">Read</option>
-            <option value="unread">Unread</option>
-          </select>
-        </th>
+        <FilterHeader v-for="column in columns" :key="column.key" :column="column" />
       </tr>
     </thead>
     <tbody>
@@ -91,6 +55,7 @@
 <script>
 import { bus } from "@/main";
 import TableHeader from "./TableHeader";
+import FilterHeader from "./FilterHeader";
 
 export default {
   name: "ArticlesTable",
@@ -100,6 +65,7 @@ export default {
   },
   components: {
     TableHeader,
+    FilterHeader,
   },
   data() {
     return {
@@ -112,30 +78,60 @@ export default {
         {
           title: "Created",
           key: "created",
+          filter: {
+            filterType: "text",
+            placeholder: "Filter Created...",
+            onchange: (val) => this.filterCreated = val,
+          },
         },
         {
           title: "Last Clicked",
           key: "lastClicked",
+          filter: {
+            filterType: "text",
+            placeholder: "Filter Last Clicked...",
+            onchange: (val) => this.filterLastClicked = val,
+          },
         },
         {
           title: "Title",
           key: "title",
+          filter: {
+            filterType: "text",
+            placeholder: "Filter Title...",
+            onchange: (val) => this.filterTitle = val,
+          },
         },
         {
           title: "Minute Read",
           key: "minuteRead",
+          filter: {
+            filterType: "none",
+          },
         },
         {
           title: "Tags",
           key: "tags",
+          filter: {
+            filterType: "none",
+          },
         },
         {
           title: "URL",
           key: "url",
+          filter: {
+            filterType: "text",
+            placeholder: "Filter URL...",
+            onchange: (val) => this.filterUrl = val,
+          },
         },
         {
           title: "Read",
           key: "read",
+          filter: {
+            filterType: "select",
+            onchange: (val) => this.filterRead = val,
+          },
         },
       ],
     };
@@ -247,32 +243,6 @@ export default {
     tr.filter-headers {
       background-color: $primaryLighter;
       color: $secondary;
-
-      th {
-        padding: 0;
-
-        input[type="text"] {
-          padding: 6px;
-          width: calc(100% - 14px);
-          font-size: 16px;
-          background-color: $primaryLighter;
-          color: $secondary;
-          border: 1px solid $primary;
-
-          &:focus {
-            border: 1px solid #42b983;
-          }
-        }
-
-        #filter-read {
-          padding: 6px;
-          width: 100%;
-          font-size: 16px;
-          background-color: $primaryLighter;
-          color: $secondary;
-          border: 1px solid $primary;
-        }
-      }
     }
   }
 
