@@ -19,13 +19,16 @@
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row.url" @click="handleRowClick(row)">
-        <td>{{ row.createdAt.seconds | formatEpochAsDate}}</td>
-        <td>{{ row.lastClicked.seconds | formatEpochAsDate}}</td>
-        <td>
+        <td :class="columns[0].classList">{{ row.createdAt.seconds | formatEpochAsDate}}</td>
+        <td :class="columns[1].classList">{{ row.lastClicked.seconds | formatEpochAsDate}}</td>
+        <td :class="columns[2].classList">
           <b>{{ row.title }}</b>
         </td>
-        <td class="minute-read-column">{{ row.minuteRead ? `${row.minuteRead} min read` : '' }}</td>
-        <td class="tags-column">
+        <td
+          class="minute-read-column"
+          :class="columns[3].classList"
+        >{{ row.minuteRead ? `${row.minuteRead} min read` : '' }}</td>
+        <td class="tags-column" :class="columns[4].classList">
           <div class="tags-container">
             <a
               v-for="tag in row.tags"
@@ -38,12 +41,14 @@
             >{{ tag.name }}</a>
           </div>
         </td>
-        <td class="url-column">
+        <td class="url-column" :class="columns[5].classList">
           <a :href="row.url" @click="(e) => e.preventDefault()">
             <i class="material-icons" style="font-size:24px">link</i>
           </a>
         </td>
-        <td :class="{'readColumn': true, 'articleRead': row.read, 'articleNotRead': !row.read}">
+        <td
+          :class="{'readColumn': true, 'articleRead': row.read, 'articleNotRead': !row.read, ...columns[6].classList}"
+        >
           <i v-if="row.read" class="material-icons" style="font-size:24px">check_box</i>
           <i v-else class="material-icons" style="font-size:24px">check_box_outline_blank</i>
         </td>
@@ -83,6 +88,9 @@ export default {
             placeholder: "Filter Created...",
             onchange: (val) => this.filterCreated = val,
           },
+          classList: {
+            "hide-medium-screen": true,
+          },
         },
         {
           title: "Last Clicked",
@@ -91,6 +99,9 @@ export default {
             filterType: "text",
             placeholder: "Filter Last Clicked...",
             onchange: (val) => this.filterLastClicked = val,
+          },
+          classList: {
+            "hide-medium-screen": true,
           },
         },
         {
@@ -108,12 +119,17 @@ export default {
           filter: {
             filterType: "none",
           },
+          classList: {
+          },
         },
         {
           title: "Tags",
           key: "tags",
           filter: {
             filterType: "none",
+          },
+          classList: {
+            "hide-small-screen": true,
           },
         },
         {
@@ -124,6 +140,9 @@ export default {
             placeholder: "Filter URL...",
             onchange: (val) => this.filterUrl = val,
           },
+          classList: {
+            "hide-small-screen": true,
+          },
         },
         {
           title: "Read",
@@ -131,6 +150,9 @@ export default {
           filter: {
             filterType: "select",
             onchange: (val) => this.filterRead = val,
+          },
+          classList: {
+            "hide-tiny-screen": true,
           },
         },
       ],
@@ -217,6 +239,8 @@ export default {
   border-collapse: collapse;
   max-width: 1600px;
   user-select: none;
+  margin: 0 12px;
+  margin-top: 16px;
 
   td,
   th {
@@ -236,6 +260,13 @@ export default {
         padding: 16px 0;
       }
     }
+
+    @media only screen and (max-width: 500px) {
+      tr.table-header {
+        font-size: 1.5rem;
+      }
+    }
+
     tr.column-headers {
       background-color: $primary;
       color: $secondary;
@@ -249,6 +280,13 @@ export default {
   tbody {
     td {
       padding: 16px;
+    }
+
+    @media only screen and (max-width: 500px) {
+      td {
+        padding: 8px 2px;
+        font-size: 0.7rem;
+      }
     }
 
     tr:nth-child(odd) {

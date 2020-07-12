@@ -6,3 +6,21 @@ $secondary: #2e3047;
 $secondaryBrighter: #34374d;
 $secondaryBrightest: #43455c;
 $secondaryLighter: #585b77;
+
+@media only screen and (max-width: 1450px) {
+  .hide-medium-screen {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 1023px) {
+  .hide-small-screen {
+    display: none !important;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .hide-tiny-screen {
+    display: none !important;
+  }
+}

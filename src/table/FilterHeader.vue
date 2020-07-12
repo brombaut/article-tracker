@@ -1,5 +1,5 @@
 <template>
-  <th class="filter-header">
+  <th class="filter-header" :class="column.classList">
     <input
       v-if="column.filter.filterType === 'text'"
       type="text"
@@ -41,6 +41,14 @@ export default {
 
     &:focus {
       border: 1px solid #42b983;
+    }
+  }
+
+  @media only screen and (max-width: 500px) {
+    input[type="text"] {
+      padding: 2px;
+      font-size: 0.8rem;
+      width: calc(100% - 6px);
     }
   }
 

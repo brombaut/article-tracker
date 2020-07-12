@@ -1,5 +1,5 @@
 <template>
-  <th class="title-column">
+  <th :class="column.classList">
     <div class="column-headers-primary">
       <div class="column-header-title">{{ column.title }}</div>
       <div class="column-header-sort-icons">
@@ -51,6 +51,13 @@ export default {
   .column-header-title {
     font-size: 20px;
     margin-right: 8px;
+  }
+
+  @media only screen and (max-width: 500px) {
+    .column-header-title {
+      font-size: 0.8rem;
+      margin-right: 2px;
+    }
   }
 
   .column-header-sort-icons {

@@ -3,7 +3,7 @@
     <img class="radar-logo" src="@/assets/radar.png" />
     <h1>BEC Article Tracker</h1>
     <div class="expand"></div>
-    <div class="actions-container">
+    <div class="actions-container hide-small-screen">
       <RandomArticleButton />
       <RefreshButton />
       <SignInDropdown />

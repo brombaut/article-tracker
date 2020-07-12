@@ -234,7 +234,10 @@ export default {
 #articles-container {
   max-width: 100%;
   margin-top: 80px;
-  min-width: 1400px;
+
+  @media only screen and (max-width: 500px) {
+    width: 100vw;
+  }
 
   .pagination-controls {
     padding: 8px 0;
@@ -263,6 +266,16 @@ export default {
       &:hover {
         cursor: pointer;
         color: $primaryBrightest;
+      }
+    }
+
+    @media only screen and (max-width: 500px) {
+      .pagination-control {
+        width: 10px;
+        i {
+          font-size: 2rem;
+          width: 8px;
+        }
       }
     }
 
@@ -300,6 +313,12 @@ export default {
 
       .page-main-number {
         margin: 0 8px;
+      }
+    }
+
+    @media only screen and (max-width: 500px) {
+      .page-numbers-container {
+        font-size: 1rem;
       }
     }
   }

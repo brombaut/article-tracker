@@ -1,5 +1,5 @@
 <template>
-  <div id="statistics-container">
+  <div id="statistics-container" class="hide-small-screen">
     <h1>Reading Statistics</h1>
     <div class="gauge-container">
       <ProgressGauge :gaugeData="readTodayData" />
@@ -87,7 +87,7 @@ export default {
 
 <style lang='scss'>
 #statistics-container {
-  margin: 16px 0;
+  margin-top: 16px;
 
   .gauge-container {
     display: flex;
