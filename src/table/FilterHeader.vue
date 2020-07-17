@@ -18,13 +18,15 @@
   </th>
 </template>
 
-<script>
-export default {
-  name: "FilterHeader",
-  props: {
-    column: Object,
-  },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+import Column from "./column";
+
+@Component
+export default class FilterHeader extends Vue {
+  @Prop()
+  column!: Column;
+}
 </script>
 
 <style lang="scss">
