@@ -7,26 +7,23 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
 
-export default {
-  name: "RefreshButton",
-  data() {
-    return {
-      isRefreshing: false,
-    };
-  },
-  methods: {
-    handleRefreshClicked() {
-      this.isRefreshing = true;
-      bus.$emit("forceArticleReload");
-    },
-  },
-  mounted() {
+@Component
+export default class RefreshButton extends Vue {
+  isRefreshing = false;
+
+  handleRefreshClicked(): void {
+    this.isRefreshing = true;
+    bus.$emit("forceArticleReload");
+  }
+
+  mounted(): void {
     bus.$on("allArticlesFromServer", () => this.isRefreshing = false);
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

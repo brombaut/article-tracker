@@ -12,21 +12,23 @@
   </header>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import AddArticleDropdown from "./AddArticleDropdown.vue";
 import SignInDropdown from "./SignInDropdown.vue";
 import RefreshButton from "./RefreshButton.vue";
 import RandomArticleButton from "./RandomArticleButton.vue";
 
-export default {
-  name: "MainHeader",
+@Component({
   components: {
     AddArticleDropdown,
     SignInDropdown,
     RefreshButton,
     RandomArticleButton,
   },
-};
+})
+export default class MainHeader extends Vue {}
+
 </script>
 
 <style lang='scss'>

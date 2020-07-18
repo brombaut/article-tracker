@@ -12,45 +12,48 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
 import SignInForm from "./SignInForm.vue";
 
-export default {
-  name: "SignInDropdown",
+@Component({
   components: {
     SignInForm,
   },
-  data() {
-    return {
-      signedIn: false,
-      showDropdown: false,
-    };
-  },
-  methods: {
-    handleDropwdownClicked() {
-      this.showDropdown = !this.showDropdown;
-      bus.$emit("signInOpened");
-    },
-    closeDropdown() {
-      this.showDropdown = false;
-    },
-    handleSignInSuccess() {
-      this.signedIn = true;
-    },
-    handleSignOutSuccess() {
-      this.signedIn = false;
-    },
-    handleSignOutClicked() {
-      bus.$emit("attemptUserSignOut");
-    },
-  },
-  mounted() {
+})
+export default class SignInDropdown extends Vue {
+  signedIn = false;
+
+  showDropdown = false;
+
+  handleDropwdownClicked(): void {
+    this.showDropdown = !this.showDropdown;
+    bus.$emit("signInOpened");
+  }
+
+  closeDropdown(): void {
+    this.showDropdown = false;
+  }
+
+  handleSignInSuccess(): void {
+    this.signedIn = true;
+  }
+
+  handleSignOutSuccess(): void {
+    this.signedIn = false;
+  }
+
+  handleSignOutClicked(): void {
+    bus.$emit("attemptUserSignOut");
+  }
+
+  mounted(): void {
     bus.$on("addArticleOpened", this.closeDropdown);
     bus.$on("signInSuccess", this.handleSignInSuccess);
     bus.$on("signOutSuccess", this.handleSignOutSuccess);
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

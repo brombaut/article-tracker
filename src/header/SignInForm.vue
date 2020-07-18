@@ -23,75 +23,88 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
 
-export default {
-  name: "SignInForm",
-  data() {
-    return {
-      email: "",
-      password: "",
-      isSubmitting: false,
-      showMessage: false,
+@Component
+export default class SignInForm extends Vue {
+  email = "";
+
+  password = "";
+
+  isSubmitting = false;
+
+  showMessage = false;
+
+  get emailInput(): HTMLInputElement {
+    return document.querySelector("#email") as HTMLInputElement;
+  }
+
+  get passwordInput(): HTMLInputElement {
+    return document.querySelector("#password") as HTMLInputElement;
+  }
+
+  get signInSubmitButton(): HTMLButtonElement {
+    return document.querySelector("#sign-in-submit-button") as HTMLButtonElement;
+  }
+
+  handleSubmit(e: Event): void {
+    e.preventDefault();
+    this.showMessage = false;
+    let stop = false;
+    if (!this.email) {
+      stop = true;
+      this.emailInput.classList.add("red-border");
+    } else {
+      this.emailInput.classList.remove("red-border");
+    }
+    if (!this.password) {
+      stop = true;
+      this.passwordInput.classList.add("red-border");
+    } else {
+      this.passwordInput.classList.remove("red-border");
+    }
+    if (stop) {
+      return;
+    }
+    this.setIsSubmitting();
+    const user = {
+      email: this.email,
+      password: this.password,
     };
-  },
-  methods: {
-    handleSubmit(e) {
-      e.preventDefault();
-      this.showMessage = false;
-      let stop = false;
-      const emailInput = document.querySelector("#email");
-      const passwordInput = document.querySelector("#password");
-      if (!this.email) {
-        stop = true;
-        emailInput.classList.add("red-border");
-      } else {
-        emailInput.classList.remove("red-border");
-      }
-      if (!this.password) {
-        stop = true;
-        passwordInput.classList.add("red-border");
-      } else {
-        passwordInput.classList.remove("red-border");
-      }
-      if (stop) {
-        return;
-      }
-      this.setIsSubmitting();
-      const user = {
-        email: this.email,
-        password: this.password,
-      };
-      bus.$emit("attemptUserSignIn", user);
-    },
-    setIsSubmitting() {
-      this.isSubmitting = true;
-      document.querySelector("#email").disabled = true;
-      document.querySelector("#password").disabled = true;
-      document.querySelector("#sign-in-submit-button").disabled = true;
-    },
-    resetForm() {
-      this.isSubmitting = false;
-      this.email = "";
-      this.password = "";
-      document.querySelector("#email").disabled = false;
-      document.querySelector("#password").disabled = false;
-      document.querySelector("#sign-in-submit-button").disabled = false;
-    },
-    handleSignInError() {
-      this.isSubmitting = false;
-      this.showMessage = true;
-      document.querySelector("#email").disabled = false;
-      document.querySelector("#password").disabled = false;
-      document.querySelector("#sign-in-submit-button").disabled = false;
-    },
-  },
-  mounted() {
+    bus.$emit("attemptUserSignIn", user);
+  }
+
+  setIsSubmitting(): void {
+    this.isSubmitting = true;
+    this.emailInput.disabled = true;
+    this.passwordInput.disabled = true;
+    this.signInSubmitButton.disabled = true;
+  }
+
+  resetForm(): void {
+    this.isSubmitting = false;
+    this.email = "";
+    this.password = "";
+    this.emailInput.disabled = false;
+    this.passwordInput.disabled = false;
+    this.signInSubmitButton.disabled = false;
+  }
+
+  handleSignInError(): void {
+    this.isSubmitting = false;
+    this.showMessage = true;
+    this.emailInput.disabled = false;
+    this.passwordInput.disabled = false;
+    this.signInSubmitButton.disabled = false;
+  }
+
+  mounted(): void {
     bus.$on("signInError", this.handleSignInError);
     bus.$on("signInSuccess", this.resetForm);
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>
