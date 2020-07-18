@@ -62,13 +62,14 @@ import { Component, Vue, Prop } from "vue-property-decorator";
 import { bus } from "@/main";
 import TableHeader from "./TableHeader.vue";
 import FilterHeader from "./FilterHeader.vue";
-import SortType from "./SortType";
-import Filter from "./filter";
+import SortType from "./sortType";
+import FilterHandler from "./filterHandler";
 import NoFilter from "./noFilter";
 import Column from "./column";
+import Filter from "./filter";
 
 @Component({
-  components: { TableHeader, FilterHeader }
+  components: { TableHeader, FilterHeader },
 })
 export default class ArticlesTable extends Vue {
   @Prop()
@@ -78,24 +79,33 @@ export default class ArticlesTable extends Vue {
   sortString!: string;
 
   filterCreated = "";
-  createdFilter: Filter = new Filter("text", "Filter Created...", this.filterCreatedHandler);
+
+  createdFilter: FilterHandler = new FilterHandler("text", "Filter Created...", this.filterCreatedHandler);
+
   createdColumn: Column = new Column("Created", "created", this.createdFilter, { "hide-medium-screen": true });
+
   filterCreatedHandler(newVal: string): void {
     this.filterUpdated("created", newVal);
   }
 
   filterLastClicked = "";
-  lastClickedFilter: Filter = new Filter("text", "Filter Last Clicked...", this.filterLastClickedHandler);
+
+  lastClickedFilter: FilterHandler = new FilterHandler("text", "Filter Last Clicked...", this.filterLastClickedHandler);
+
   lastClickedColumn: Column = new Column("Last Clicked", "lastClicked", this.lastClickedFilter, {
-    "hide-medium-screen": true
+    "hide-medium-screen": true,
   });
+
   filterLastClickedHandler(newVal: string): void {
     this.filterUpdated("lastClicked", newVal);
   }
 
   filterTitle = "";
-  titleFilter: Filter = new Filter("text", "Filter Title...", this.filterTitleHandler);
-  titleColumn: Column = new Column("Created", "created", this.titleFilter, {});
+
+  titleFilter: FilterHandler = new FilterHandler("text", "Filter Title...", this.filterTitleHandler);
+
+  titleColumn: Column = new Column("Title", "title", this.titleFilter, {});
+
   filterTitleHandler(newVal: string): void {
     this.filterUpdated("url", newVal);
   }
@@ -105,15 +115,21 @@ export default class ArticlesTable extends Vue {
   tagsColumn: Column = new Column("Tags", "tags", new NoFilter(), { "hide-small-screen": true });
 
   filterUrl = "";
-  urlFilter: Filter = new Filter("text", "Filter URL...", this.filterUrlHandler);
+
+  urlFilter: FilterHandler = new FilterHandler("text", "Filter URL...", this.filterUrlHandler);
+
   urlColumn: Column = new Column("URL", "url", this.urlFilter, { "hide-small-screen": true });
+
   filterUrlHandler(newVal: string): void {
     this.filterUpdated("url", newVal);
   }
 
   filterRead = "unread";
-  readFilter: Filter = new Filter("text", "", this.filterReadHandler);
+
+  readFilter: FilterHandler = new FilterHandler("text", "", this.filterReadHandler);
+
   readColumn: Column = new Column("Read", "read", this.readFilter, { "hide-tiny-screen": true });
+
   filterReadHandler(newVal: string): void {
     this.filterUpdated("read", newVal);
   }
@@ -126,11 +142,11 @@ export default class ArticlesTable extends Vue {
       this.minuteReadColumn,
       this.tagsColumn,
       this.urlColumn,
-      this.readColumn
+      this.readColumn,
     ];
   }
 
-  get tableTitle() {
+  get tableTitle(): string {
     switch (this.filterRead) {
       case "unread":
         return "Unread Articles";
@@ -141,7 +157,7 @@ export default class ArticlesTable extends Vue {
     }
   }
 
-  formatEpochAsDate(epoch: number) {
+  formatEpochAsDate(epoch: number): string {
     if (!epoch) {
       return "";
     }
@@ -159,16 +175,16 @@ export default class ArticlesTable extends Vue {
       "September",
       "October",
       "November",
-      "December"
+      "December",
     ];
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   }
 
-  setSortType(type: SortType) {
+  setSortType(type: SortType): void {
     bus.$emit("sortUpdated", type);
   }
 
-  handleRowClick(row: any) {
+  handleRowClick(row: any): void {
     const result = window.open(row.url, "_blank");
     if (result) {
       result.focus();
@@ -177,10 +193,7 @@ export default class ArticlesTable extends Vue {
   }
 
   filterUpdated(type: string, value: string): void {
-    const filterUpdateObject = {
-      type,
-      value
-    };
+    const filterUpdateObject: Filter = new Filter(type, value);
     bus.$emit("filterUpdated", filterUpdateObject);
   }
 }

@@ -18,8 +18,8 @@ import ArticlesContainer from "./table/ArticlesContainer.vue";
   components: {
     MainHeader,
     ServerCommunication,
-    ArticlesContainer
-  }
+    ArticlesContainer,
+  },
 })
 export default class App extends Vue {}
 </script>

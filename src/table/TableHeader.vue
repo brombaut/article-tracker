@@ -28,19 +28,19 @@ export default class TableHeader extends Vue {
   @Prop()
   sortString!: string;
 
-  get ascendingSortActive() {
+  get ascendingSortActive(): boolean {
     return this.sortString === `${this.column.key}-ascending`;
   }
 
-  get descendingSortActive() {
+  get descendingSortActive(): boolean {
     return this.sortString === `${this.column.key}-descending`;
   }
 
-  setAscendingSort() {
+  setAscendingSort(): void {
     this.$emit("sortButtonClicked", { attribute: this.column.key, type: "ascending" });
   }
 
-  setDescendingSort() {
+  setDescendingSort(): void {
     this.$emit("sortButtonClicked", { attribute: this.column.key, type: "descending" });
   }
 }

@@ -1,19 +1,18 @@
 export default class Filter {
-  private _filterType: string;
-  private _placeholder: string;
-  public onchange: (val: string) => void;
+  private _type: string;
 
-  constructor(filterType: string, placeholder: string, onchange: (val: string) => void) {
-    this._filterType = filterType;
-    this._placeholder = placeholder;
-    this.onchange = onchange;
+  private _value: string;
+
+  constructor(t: string, v: string) {
+    this._type = t;
+    this._value = v;
   }
 
-  get filterType() {
-    return this._filterType;
+  get type(): string {
+    return this._type;
   }
 
-  get placeholder() {
-    return this._placeholder;
+  get value(): string {
+    return this._value;
   }
 }
