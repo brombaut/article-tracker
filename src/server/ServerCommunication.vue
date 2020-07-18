@@ -5,6 +5,8 @@ import firebase from "firebase";
 import { articlesCollection } from "./firebase";
 import Article from "../table/article";
 import User from "./user";
+import FirebaseDate from "../table/firebaseDate";
+import Tag from "../table/tag";
 
 
 firebase.auth().onAuthStateChanged(user => {
@@ -14,6 +16,16 @@ firebase.auth().onAuthStateChanged(user => {
     bus.$emit("signOutSuccess");
   }
 });
+
+interface ArticleDTO {
+  createdAt: FirebaseDate;
+  lastClicked: FirebaseDate;
+  title: string;
+  minuteRead: number;
+  tags: Tag[];
+  url: string;
+  read: boolean;
+}
 
 @Component
 export default class ServerCommunication extends Vue {
@@ -31,7 +43,17 @@ export default class ServerCommunication extends Vue {
     })
       .then((docRef) => {
         articlesCollection.doc(docRef.id).get().then(newArticle => {
-          this.articles.push({ ...newArticle.data() });
+          const articleData: ArticleDTO = { ...newArticle.data() } as ArticleDTO;
+          const aArticle: Article = new Article(
+            articleData.createdAt,
+            articleData.lastClicked,
+            articleData.title,
+            articleData.minuteRead,
+            articleData.tags,
+            articleData.url,
+            articleData.read,
+          );
+          this.articles.push(aArticle);
           bus.$emit("allArticlesFromServer", this.articles);
         });
         bus.$emit("clearArticleForm");
