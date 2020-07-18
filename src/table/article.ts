@@ -50,23 +50,6 @@ export default class Article {
     return this._minuteRead;
   }
 
-  getField<T>(field: string): T {
-    switch (field) {
-      case "created":
-        return this.createdAt;
-      case "lastClicked":
-        return this.lastClicked;
-      case "title":
-        return this.title;
-      case "url":
-        return this.url;
-      case "read":
-        return this.read;
-      default:
-        throw new Exception("Invalid Field");
-    }
-  }
-
   compareTo(a: Article, field: string, type: string): number {
     switch (field) {
       case "created":
@@ -76,11 +59,9 @@ export default class Article {
       case "title":
         return this.compareTitle(a, type);
       case "url":
-        return this.url;
-      case "read":
-        return this.read;
+        return this.compareUrl(a, type);
       default:
-        throw new Exception("Invalid Field");
+        throw new Error("Invalid Field");
     }
   }
 

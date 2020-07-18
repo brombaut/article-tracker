@@ -10,79 +10,72 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
 import ProgressGauge from "./ProgressGauge.vue";
+import Article from "../table/article";
+import GaugeData from "./GaugeData";
 
-export default {
-  name: "StatisticsContainer",
+@Component({
   components: {
     ProgressGauge,
   },
-  props: {
-    articles: Array,
-  },
-  computed: {
-    allTimeData() {
-      return {
-        title: "All Time",
-        primaryValue: this.readArticlesCount(this.articles),
-        secondaryValue: this.unreadArticlesCount(this.articles),
-      };
-    },
-    pastMonthData() {
-      const secondsDate = this.getSecondsFromCurrentDateMinusDays(30);
-      const pastMonthRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
-      return {
-        title: "Past Month",
-        primaryValue: this.readArticlesCount(pastMonthRecords),
-        secondaryValue: this.unreadArticlesCount(pastMonthRecords),
-      };
-    },
-    pastWeekData() {
-      const secondsDate = this.getSecondsFromCurrentDateMinusDays(7);
-      const pastWeekRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
-      return {
-        title: "Past Week",
-        primaryValue: this.readArticlesCount(pastWeekRecords),
-        secondaryValue: this.unreadArticlesCount(pastWeekRecords),
-      };
-    },
-    readTodayData() {
-      const secondsDate = this.getStartOfTodaySeconds();
-      const pastDayRecords = this.getArticlesLastClickedAfterSeconds(secondsDate);
-      const readToday = this.readArticlesCount(pastDayRecords) > 0;
-      return {
-        title: "Read Today",
-        primaryValue: this.readArticlesCount(pastDayRecords),
-        secondaryValue: this.unreadArticlesCount(pastDayRecords),
-      };
-    },
-  },
-  methods: {
-    readArticlesCount(articles) {
-      return articles.filter(article => article.read).length;
-    },
-    unreadArticlesCount(articles) {
-      return articles.filter(article => !article.read).length;
-    },
-    getStartOfTodaySeconds() {
-      const today = new Date();
-      const priorDateMilli = today.setHours(0, 0, 0, 0);
-      return Math.floor(priorDateMilli / 1000);
-    },
-    getSecondsFromCurrentDateMinusDays(days) {
-      const today = new Date();
-      const priorDateMilli = new Date().setDate(today.getDate() - days);
-      return Math.floor(priorDateMilli / 1000);
-    },
-    getArticlesCreatedAfterSeconds(seconds) {
-      return this.articles.filter(article => article.createdAt.seconds > seconds);
-    },
-    getArticlesLastClickedAfterSeconds(seconds) {
-      return this.articles.filter(article => article.lastClicked.seconds > seconds);
-    },
-  },
-};
+})
+export default class StatisticsContainer extends Vue {
+  @Prop()
+  articles!: Article[];
+
+  get allTimeData(): GaugeData {
+    return new GaugeData("All Time", this.readArticlesCount(this.articles), this.unreadArticlesCount(this.articles));
+  }
+
+  get pastMonthData(): GaugeData {
+    const secondsDate = this.getSecondsFromCurrentDateMinusDays(30);
+    const pastMonthRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
+    return new GaugeData("Past Month", this.readArticlesCount(pastMonthRecords), this.unreadArticlesCount(pastMonthRecords));
+  }
+
+  get pastWeekData(): GaugeData {
+    const secondsDate = this.getSecondsFromCurrentDateMinusDays(7);
+    const pastWeekRecords = this.getArticlesCreatedAfterSeconds(secondsDate);
+    return new GaugeData("Past Week", this.readArticlesCount(pastWeekRecords), this.unreadArticlesCount(pastWeekRecords));
+  }
+
+  get readTodayData(): GaugeData {
+    const secondsDate = this.getStartOfTodaySeconds();
+    const pastDayRecords = this.getArticlesLastClickedAfterSeconds(secondsDate);
+    const readToday = this.readArticlesCount(pastDayRecords) > 0;
+    return new GaugeData("Read Today", this.readArticlesCount(pastDayRecords), this.unreadArticlesCount(pastDayRecords));
+  }
+
+  readArticlesCount(articles: Article[]): number {
+    return articles.filter(article => article.read).length;
+  }
+
+  unreadArticlesCount(articles: Article[]): number {
+    return articles.filter(article => !article.read).length;
+  }
+
+  getStartOfTodaySeconds(): number {
+    const today = new Date();
+    const priorDateMilli = today.setHours(0, 0, 0, 0);
+    return Math.floor(priorDateMilli / 1000);
+  }
+
+  getSecondsFromCurrentDateMinusDays(days: number): number {
+    const today = new Date();
+    const priorDateMilli = new Date().setDate(today.getDate() - days);
+    return Math.floor(priorDateMilli / 1000);
+  }
+
+  getArticlesCreatedAfterSeconds(seconds: number): Article[] {
+    return this.articles.filter(article => article.createdAt > seconds);
+  }
+
+  getArticlesLastClickedAfterSeconds(seconds: number): Article[] {
+    return this.articles.filter(article => article.lastClicked > seconds);
+  }
+}
 </script>
 
 <style lang='scss'>
