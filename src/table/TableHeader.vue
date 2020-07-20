@@ -16,29 +16,34 @@
   </th>
 </template>
 
-<script>
-export default {
-  name: "TableHeader",
-  props: {
-    column: Object,
-  },
-  computed: {
-    ascendingSortActive() {
-      return this.sortString === `${this.column.key}-ascending`;
-    },
-    descendingSortActive() {
-      return this.sortString === `${this.column.key}-descending`;
-    },
-  },
-  methods: {
-    setAscendingSort() {
-      this.$emit("sortButtonClicked", { attribute: this.column.key, type: "ascending" });
-    },
-    setDescendingSort() {
-      this.$emit("sortButtonClicked", { attribute: this.column.key, type: "descending" });
-    },
-  },
-};
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
+import Column from "./column";
+
+@Component
+export default class TableHeader extends Vue {
+  @Prop()
+  column!: Column;
+
+  @Prop()
+  sortString!: string;
+
+  get ascendingSortActive(): boolean {
+    return this.sortString === `${this.column.key}-ascending`;
+  }
+
+  get descendingSortActive(): boolean {
+    return this.sortString === `${this.column.key}-descending`;
+  }
+
+  setAscendingSort(): void {
+    this.$emit("sortButtonClicked", { attribute: this.column.key, type: "ascending" });
+  }
+
+  setDescendingSort(): void {
+    this.$emit("sortButtonClicked", { attribute: this.column.key, type: "descending" });
+  }
+}
 </script>
 
 <style lang="scss">

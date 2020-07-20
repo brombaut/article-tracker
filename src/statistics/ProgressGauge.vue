@@ -12,48 +12,48 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "ProgressGauge",
-  props: {
-    gaugeData: Object,
-  },
-  computed: {
-    parimeryValueLabel() {
-      if (typeof this.gaugeData.primaryValue === "boolean") {
-        return this.gaugeData.primaryValue ? "Yes" : "No";
-      }
-      return this.gaugeData.primaryValue;
-    },
-    secondaryValueLabel() {
-      if (typeof this.gaugeData.secondaryValue === "boolean") {
-        return this.gaugeData.secondaryValue ? "Yes" : "No";
-      }
-      return this.gaugeData.secondaryValue;
-    },
-  },
-  watch: {
-    gaugeData() {
-      this.setProgressBar();
-    },
-  },
-  methods: {
-    setProgressBar() {
-      let percent;
-      if (typeof this.gaugeData.primaryValue === "boolean" && typeof this.gaugeData.secondaryValue === "boolean") {
-        percent = this.gaugeData.primaryValue ? 1 : 0;
-      } else {
-        percent = this.gaugeData.primaryValue / (this.gaugeData.primaryValue + this.gaugeData.secondaryValue);
-      }
-      const rotate = Math.floor(180 * percent);
-      const progresEl = this.$el.querySelector(".semi-circle--mask");
-      progresEl.style.transform = `rotate(${rotate}deg) translate3d(0,0,0)`;
-    },
-  },
-  mounted() {
+<script lang="ts">
+import {
+  Component, Vue, Prop, Watch,
+} from "vue-property-decorator";
+import GaugeData from "./GaugeData"
+
+@Component
+export default class ProgressGauge extends Vue {
+  @Prop()
+  gaugeData!: GaugeData;
+
+  get parimeryValueLabel(): string | number {
+    if (typeof this.gaugeData.primaryValue === "boolean") {
+      return this.gaugeData.primaryValue ? "Yes" : "No";
+    }
+    return this.gaugeData.primaryValue;
+  }
+
+  get secondaryValueLabel(): string | number {
+    if (typeof this.gaugeData.secondaryValue === "boolean") {
+      return this.gaugeData.secondaryValue ? "Yes" : "No";
+    }
+    return this.gaugeData.secondaryValue;
+  }
+
+  @Watch("gaugeData")
+  setProgressBar(): void {
+    let percent: number;
+    if (typeof this.gaugeData.primaryValue === "boolean" && typeof this.gaugeData.secondaryValue === "boolean") {
+      percent = this.gaugeData.primaryValue ? 1 : 0;
+    } else {
+      percent = this.gaugeData.primaryValue / (this.gaugeData.primaryValue + this.gaugeData.secondaryValue);
+    }
+    const rotate = Math.floor(180 * percent);
+    const progresEl = this.$el.querySelector(".semi-circle--mask") as HTMLDivElement;
+    progresEl.style.transform = `rotate(${rotate}deg) translate3d(0,0,0)`;
+  }
+
+  mounted(): void {
     this.setProgressBar();
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

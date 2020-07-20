@@ -19,8 +19,8 @@
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row.url" @click="handleRowClick(row)">
-        <td :class="columns[0].classList">{{ row.createdAt.seconds | formatEpochAsDate}}</td>
-        <td :class="columns[1].classList">{{ row.lastClicked.seconds | formatEpochAsDate}}</td>
+        <td :class="columns[0].classList">{{ formatEpochAsDate(row.createdAt)}}</td>
+        <td :class="columns[1].classList">{{ formatEpochAsDate(row.lastClicked)}}</td>
         <td :class="columns[2].classList">
           <b>{{ row.title }}</b>
         </td>
@@ -57,181 +57,147 @@
   </table>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
 import { bus } from "@/main";
-import TableHeader from "./TableHeader";
-import FilterHeader from "./FilterHeader";
+import TableHeader from "./TableHeader.vue";
+import FilterHeader from "./FilterHeader.vue";
+import SortType from "./sortType";
+import FilterHandler from "./filterHandler";
+import NoFilter from "./noFilter";
+import Column from "./column";
+import Filter from "./filter";
 
-export default {
-  name: "ArticlesTable",
-  props: {
-    rows: Array,
-    sortString: String,
-  },
-  components: {
-    TableHeader,
-    FilterHeader,
-  },
-  data() {
-    return {
-      filterCreated: "",
-      filterLastClicked: "",
-      filterTitle: "",
-      filterUrl: "",
-      filterRead: "unread",
-      columns: [
-        {
-          title: "Created",
-          key: "created",
-          filter: {
-            filterType: "text",
-            placeholder: "Filter Created...",
-            onchange: (val) => this.filterCreated = val,
-          },
-          classList: {
-            "hide-medium-screen": true,
-          },
-        },
-        {
-          title: "Last Clicked",
-          key: "lastClicked",
-          filter: {
-            filterType: "text",
-            placeholder: "Filter Last Clicked...",
-            onchange: (val) => this.filterLastClicked = val,
-          },
-          classList: {
-            "hide-medium-screen": true,
-          },
-        },
-        {
-          title: "Title",
-          key: "title",
-          filter: {
-            filterType: "text",
-            placeholder: "Filter Title...",
-            onchange: (val) => this.filterTitle = val,
-          },
-        },
-        {
-          title: "Minute Read",
-          key: "minuteRead",
-          filter: {
-            filterType: "none",
-          },
-          classList: {
-          },
-        },
-        {
-          title: "Tags",
-          key: "tags",
-          filter: {
-            filterType: "none",
-          },
-          classList: {
-            "hide-small-screen": true,
-          },
-        },
-        {
-          title: "URL",
-          key: "url",
-          filter: {
-            filterType: "text",
-            placeholder: "Filter URL...",
-            onchange: (val) => this.filterUrl = val,
-          },
-          classList: {
-            "hide-small-screen": true,
-          },
-        },
-        {
-          title: "Read",
-          key: "read",
-          filter: {
-            filterType: "select",
-            onchange: (val) => this.filterRead = val,
-          },
-          classList: {
-            "hide-tiny-screen": true,
-          },
-        },
-      ],
-    };
-  },
-  filters: {
-    formatEpochAsDate(epoch) {
-      if (!epoch) {
-        return "";
-      }
-      const date = new Date(0);
-      date.setUTCSeconds(epoch);
-      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-    },
-  },
-  computed: {
-    tableTitle() {
-      switch (this.filterRead) {
-        case "unread":
-          return "Unread Articles";
-        case "read":
-          return "Read Articles";
-        default:
-          return "All Articles";
-      }
-    },
-  },
-  methods: {
-    setSortType({ attribute, type }) {
-      const updateSortType = {
-        attribute,
-        type,
-      };
-      bus.$emit("sortUpdated", updateSortType);
-    },
-    handleRowClick(row) {
-      window.open(row.url, "_blank").focus();
-      bus.$emit("articleClicked", row);
-    },
-  },
-  watch: {
-    filterCreated(newVal) {
-      const filterUpdateObject = {
-        type: "created",
-        value: newVal,
-      };
-      bus.$emit("filterUpdated", filterUpdateObject);
-    },
-    filterLastClicked(newVal) {
-      const filterUpdateObject = {
-        type: "created",
-        value: newVal,
-      };
-      bus.$emit("filterUpdated", filterUpdateObject);
-    },
-    filterTitle(newVal) {
-      const filterUpdateObject = {
-        type: "title",
-        value: newVal,
-      };
-      bus.$emit("filterUpdated", filterUpdateObject);
-    },
-    filterUrl(newVal) {
-      const filterUpdateObject = {
-        type: "url",
-        value: newVal,
-      };
-      bus.$emit("filterUpdated", filterUpdateObject);
-    },
-    filterRead(newVal) {
-      const filterUpdateObject = {
-        type: "read",
-        value: newVal,
-      };
-      bus.$emit("filterUpdated", filterUpdateObject);
-    },
-  },
-};
+@Component({
+  components: { TableHeader, FilterHeader },
+})
+export default class ArticlesTable extends Vue {
+  @Prop()
+  rows!: any[];
+
+  @Prop()
+  sortString!: string;
+
+  filterCreated = "";
+
+  createdFilter: FilterHandler = new FilterHandler("text", "Filter Created...", this.filterCreatedHandler);
+
+  createdColumn: Column = new Column("Created", "created", this.createdFilter, { "hide-medium-screen": true });
+
+  filterCreatedHandler(newVal: string): void {
+    this.filterUpdated("created", newVal);
+  }
+
+  filterLastClicked = "";
+
+  lastClickedFilter: FilterHandler = new FilterHandler("text", "Filter Last Clicked...", this.filterLastClickedHandler);
+
+  lastClickedColumn: Column = new Column("Last Clicked", "lastClicked", this.lastClickedFilter, {
+    "hide-medium-screen": true,
+  });
+
+  filterLastClickedHandler(newVal: string): void {
+    this.filterUpdated("lastClicked", newVal);
+  }
+
+  filterTitle = "";
+
+  titleFilter: FilterHandler = new FilterHandler("text", "Filter Title...", this.filterTitleHandler);
+
+  titleColumn: Column = new Column("Title", "title", this.titleFilter, {});
+
+  filterTitleHandler(newVal: string): void {
+    this.filterUpdated("url", newVal);
+  }
+
+  minuteReadColumn: Column = new Column("Minute Read", "minuteRead", new NoFilter(), {});
+
+  tagsColumn: Column = new Column("Tags", "tags", new NoFilter(), { "hide-small-screen": true });
+
+  filterUrl = "";
+
+  urlFilter: FilterHandler = new FilterHandler("text", "Filter URL...", this.filterUrlHandler);
+
+  urlColumn: Column = new Column("URL", "url", this.urlFilter, { "hide-small-screen": true });
+
+  filterUrlHandler(newVal: string): void {
+    this.filterUpdated("url", newVal);
+  }
+
+  filterRead = "unread";
+
+  readFilter: FilterHandler = new FilterHandler("select", this.filterRead, this.filterReadHandler);
+
+  readColumn: Column = new Column("Read", "read", this.readFilter, { "hide-tiny-screen": true });
+
+  filterReadHandler(newVal: string): void {
+    this.filterRead = newVal;
+    this.filterUpdated("read", newVal);
+  }
+
+  get columns(): Column[] {
+    return [
+      this.createdColumn,
+      this.lastClickedColumn,
+      this.titleColumn,
+      this.minuteReadColumn,
+      this.tagsColumn,
+      this.urlColumn,
+      this.readColumn,
+    ];
+  }
+
+  get tableTitle(): string {
+    switch (this.filterRead) {
+      case "unread":
+        return "Unread Articles";
+      case "read":
+        return "Read Articles";
+      default:
+        return "All Articles";
+    }
+  }
+
+  formatEpochAsDate(epoch: number): string {
+    if (!epoch) {
+      return "";
+    }
+    const date = new Date(0);
+    date.setUTCSeconds(epoch);
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  }
+
+  setSortType(type: SortType): void {
+    bus.$emit("sortUpdated", type);
+  }
+
+  handleRowClick(row: any): void {
+    const result = window.open(row.url, "_blank");
+    if (result) {
+      result.focus();
+    }
+    bus.$emit("articleClicked", row);
+  }
+
+  filterUpdated(type: string, value: string): void {
+    const filterUpdateObject: Filter = new Filter(type, value);
+    bus.$emit("filterUpdated", filterUpdateObject);
+  }
+}
 </script>
 
 <style lang='scss'>

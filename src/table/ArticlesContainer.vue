@@ -53,181 +53,193 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue, Prop } from "vue-property-decorator";
 import { bus } from "@/main";
 import ArticlesTable from "./ArticlesTable.vue";
 import StatisticsContainer from "../statistics/StatisticsContainer.vue";
+import SortType from "./sortType";
+import Article from "./article";
+import Filter from "./filter";
 
-export default {
-  name: "ArticlesContainer",
+@Component({
   components: {
     ArticlesTable,
     StatisticsContainer,
   },
-  data() {
-    return {
-      articles: [],
-      filters: {
-        created: "",
-        lastClicked: "",
-        title: "",
-        url: "",
-        read: "unread",
-      },
-      sort: {
-        attribute: "created",
-        type: "ascending",
-      },
-      pagination: {
-        pageNumber: 0,
-        recordsPerPage: 10,
-      },
-    };
-  },
-  computed: {
-    articlesToDisplay() {
-      let returnArray = [...this.articles];
-      returnArray = this.filterArray(returnArray);
-      returnArray = this.sortArray(returnArray);
-      returnArray = this.getArticlesForPaginationPage(returnArray);
-      return returnArray;
-    },
-    allArticlesToDisplay() {
-      let returnArray = [...this.articles];
-      returnArray = this.filterArray(returnArray);
-      returnArray = this.sortArray(returnArray);
-      return returnArray;
-    },
-    sortString() {
-      return `${this.sort.attribute}-${this.sort.type}`;
-    },
-    numberOfPaginationPages() {
-      const totalRecords = this.allArticlesToDisplay.length - 1;
-      const lastPageNumber = Math.floor(totalRecords / this.pagination.recordsPerPage);
-      return lastPageNumber;
-    },
-    displayedArticlesLength() {
-      return this.articlesToDisplay.length;
-    },
-  },
-  methods: {
-    handleAllArticlesFromServer(allArticles) {
-      this.articles = [...allArticles];
-    },
-    handleFilterUpdated(updatedFilterObject) {
-      this.filters[updatedFilterObject.type] = updatedFilterObject.value;
-      this.pagination.pageNumber = 0;
-    },
-    handleSortUpdated(updateSortType) {
-      this.sort = { ...updateSortType };
-    },
-    convertSecondsEpochToDateFormatted(second) {
-      if (!second) {
-        return "";
-      }
-      const date = new Date(0);
-      date.setUTCSeconds(second);
-      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
-    },
-    filterArray(array) {
-      if (this.filters.created) {
-        array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt.seconds).includes(this.filters.created.toString()));
-      }
-      if (this.filters.lastClicked) {
-        array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.lastClicked.seconds).includes(this.filters.lastClicked.toString()));
-      }
-      if (this.filters.title) {
-        array = array.filter(record => record.title.toString().toLowerCase().includes(this.filters.title.toString().toLowerCase()));
-      }
-      if (this.filters.url) {
-        array = array.filter(record => record.url.toString().toLowerCase().includes(this.filters.url.toString().toLowerCase()));
-      }
-      if (this.filters.read) {
-        const readShouldBe = this.filters.read === "read";
-        array = array.filter(record => record.read === readShouldBe);
-      }
-      return array;
-    },
-    sortArray(array) {
-      let endElementsArray = [];
-      let arrayToSort = [...array];
-      let sortFunction = this.sortByGeneralComparison;
-      if (this.sort.attribute === "created") {
-        sortFunction = this.sortBySecondsAttribute("createdAt");
-      }
-      if (this.sort.attribute === "lastClicked") {
-        sortFunction = this.sortBySecondsAttribute("lastClicked");
-      }
-      if (this.sort.attribute === "minuteRead") {
-        arrayToSort = array.filter(a => a.minuteRead);
-        endElementsArray = array.filter(a => !a.minuteRead);
-      }
-      arrayToSort = arrayToSort.sort(sortFunction);
-      return [...arrayToSort, ...endElementsArray];
-    },
-    sortByGeneralComparison(a, b) {
-      if (this.sort.type === "ascending") {
-        if (a[this.sort.attribute] >= b[this.sort.attribute]) {
-          return 1;
-        }
-        return -1;
-      }
-      if (a[this.sort.attribute] < b[this.sort.attribute]) {
-        return 1;
-      }
-      return -1;
-    },
-    sortBySecondsAttribute(attribute) {
-      return (a, b) => {
-        if (this.sort.type === "ascending") {
-          if (a[attribute].seconds >= b[attribute].seconds) {
-            return 1;
-          }
-          return -1;
-        }
-        if (a[attribute].seconds < b[attribute].seconds) {
-          return 1;
-        }
-        return -1;
-      };
-    },
-    getArticlesForPaginationPage(array) {
-      const startIndex = this.pagination.pageNumber * this.pagination.recordsPerPage;
-      const endIndex = (this.pagination.pageNumber * this.pagination.recordsPerPage) + this.pagination.recordsPerPage;
-      return array.slice(startIndex, endIndex);
-    },
-    incrementPagination() {
-      const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
-      if (currentLastIndexDisplayed > this.allArticlesToDisplay.length) {
-        return;
-      }
-      this.pagination.pageNumber += 1;
-    },
-    decrementPagination() {
-      const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
-      if (this.pagination.pageNumber <= 0) {
-        return;
-      }
-      this.pagination.pageNumber -= 1;
-    },
-    setPaginationToStart() {
-      this.pagination.pageNumber = 0;
-    },
-    setPaginationToEnd() {
-      this.pagination.pageNumber = this.numberOfPaginationPages;
-    },
-    setPagination(index) {
-      this.pagination.pageNumber = index;
-    },
-  },
-  mounted() {
+})
+export default class ArticlesContainer extends Vue {
+  articles: Article[] = [];
+
+  filters: { [key: string]: string } = {
+    created: "",
+    lastClicked: "",
+    title: "",
+    url: "",
+    read: "unread",
+  };
+
+  sort: SortType = {
+    attribute: "created",
+    type: "ascending",
+  };
+
+  pagination = {
+    pageNumber: 0,
+    recordsPerPage: 10,
+  };
+
+  get articlesToDisplay(): Article[] {
+    let returnArray: Article[] = [...this.articles];
+    returnArray = this.filterArray(returnArray);
+    returnArray = this.sortArray(returnArray);
+    returnArray = this.getArticlesForPaginationPage(returnArray);
+    return returnArray;
+  }
+
+  get allArticlesToDisplay(): object[] {
+    let returnArray = [...this.articles];
+    returnArray = this.filterArray(returnArray);
+    returnArray = this.sortArray(returnArray);
+    return returnArray;
+  }
+
+  get sortString(): string {
+    return `${this.sort.attribute}-${this.sort.type}`;
+  }
+
+  get numberOfPaginationPages(): number {
+    const totalRecords = this.allArticlesToDisplay.length - 1;
+    const lastPageNumber = Math.floor(totalRecords / this.pagination.recordsPerPage);
+    return lastPageNumber;
+  }
+
+  get displayedArticlesLength(): number {
+    return this.articlesToDisplay.length;
+  }
+
+  handleAllArticlesFromServer(allArticles: Article[]): void {
+    this.articles = [...allArticles];
+  }
+
+  handleFilterUpdated(updatedFilterObject: Filter): void {
+    this.filters[updatedFilterObject.type] = updatedFilterObject.value;
+    this.pagination.pageNumber = 0;
+  }
+
+  handleSortUpdated(updateSortType: SortType): void {
+    this.sort = { ...updateSortType };
+  }
+
+  convertSecondsEpochToDateFormatted(second: number): string {
+    if (!second) {
+      return "";
+    }
+    const date = new Date(0);
+    date.setUTCSeconds(second);
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
+  }
+
+  filterArray(array: Article[]): Article[] {
+    if (this.filters.created) {
+      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt).includes(
+        this.filters.created.toString(),
+      ));
+    }
+    if (this.filters.lastClicked) {
+      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.lastClicked).includes(
+        this.filters.lastClicked.toString(),
+      ));
+    }
+    if (this.filters.title) {
+      array = array.filter(record => record.title
+        .toString()
+        .toLowerCase()
+        .includes(this.filters.title.toString().toLowerCase()));
+    }
+    if (this.filters.url) {
+      array = array.filter(record => record.url
+        .toString()
+        .toLowerCase()
+        .includes(this.filters.url.toString().toLowerCase()));
+    }
+    if (this.filters.read && this.filters.read !== "all") {
+      const readShouldBe = this.filters.read === "read";
+      array = array.filter(record => record.read === readShouldBe);
+    }
+    return array;
+  }
+
+  sortArray(array: Article[]): Article[] {
+    let endElementsArray: Article[] = [];
+    let arrayToSort = [...array];
+    if (this.sort.attribute === "minuteRead") {
+      arrayToSort = array.filter(a => a.minuteRead);
+      endElementsArray = array.filter(a => !a.minuteRead);
+    }
+    arrayToSort = arrayToSort.sort(this.sortByGeneralComparison);
+    return [...arrayToSort, ...endElementsArray];
+  }
+
+  sortByGeneralComparison(a: Article, b: Article): number {
+    return a.compareTo(b, this.sort.attribute, this.sort.type);
+  }
+
+  getArticlesForPaginationPage(array: Article[]): Article[] {
+    const startIndex = this.pagination.pageNumber * this.pagination.recordsPerPage;
+    const endIndex = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
+    return array.slice(startIndex, endIndex);
+  }
+
+  incrementPagination(): void {
+    const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
+    if (currentLastIndexDisplayed > this.allArticlesToDisplay.length) {
+      return;
+    }
+    this.pagination.pageNumber += 1;
+  }
+
+  decrementPagination(): void {
+    const currentLastIndexDisplayed = this.pagination.pageNumber * this.pagination.recordsPerPage + this.pagination.recordsPerPage;
+    if (this.pagination.pageNumber <= 0) {
+      return;
+    }
+    this.pagination.pageNumber -= 1;
+  }
+
+  setPaginationToStart(): void {
+    this.pagination.pageNumber = 0;
+  }
+
+  setPaginationToEnd(): void {
+    this.pagination.pageNumber = this.numberOfPaginationPages;
+  }
+
+  setPagination(index: number): void {
+    this.pagination.pageNumber = index;
+  }
+
+  mounted(): void {
     bus.$on("allArticlesFromServer", this.handleAllArticlesFromServer);
     bus.$on("filterUpdated", this.handleFilterUpdated);
     bus.$on("sortUpdated", this.handleSortUpdated);
     bus.$emit("forceArticleReload");
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

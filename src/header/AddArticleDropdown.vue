@@ -9,33 +9,32 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
 import AddArticleForm from "./AddArticleForm.vue";
 
-export default {
-  name: "AddArticleDropdown",
+@Component({
   components: {
     AddArticleForm,
   },
-  data() {
-    return {
-      showDropdown: false,
-    };
-  },
-  methods: {
-    handleDropwdownClicked() {
-      this.showDropdown = !this.showDropdown;
-      bus.$emit("addArticleOpened");
-    },
-    closeDropdown() {
-      this.showDropdown = false;
-    },
-  },
-  mounted() {
+})
+export default class AddArticleDropdown extends Vue {
+  showDropdown = false;
+
+  handleDropwdownClicked(): void {
+    this.showDropdown = !this.showDropdown;
+    bus.$emit("addArticleOpened");
+  }
+
+  closeDropdown(): void {
+    this.showDropdown = false;
+  }
+
+  mounted(): void {
     bus.$on("signInOpened", this.closeDropdown);
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

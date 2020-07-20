@@ -30,129 +30,152 @@
   </form>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
 import scraper from "../scraper/scraper";
 
-export default {
-  name: "AddArticleForm",
-  data() {
-    return {
-      articleTitle: "",
-      articleUrl: "",
-      articleRead: false,
-      isSubmitting: false,
-      showOnlyBenMessage: false,
-    };
-  },
-  methods: {
-    handleSubmit(e) {
-      e.preventDefault();
-      this.setIsSubmitting();
-      let stop = false;
-      stop = this.validateUrl();
-      if (stop) {
-        this.setIsNotSubmitting();
-        return;
-      }
-      if (!this.articleTitle) {
-        this.attemptArticleInformationScrape();
-        return;
-      }
+@Component
+export default class AddArticleForm extends Vue {
+  articleTitle = "";
 
-      stop = this.validateTitle();
-      if (stop) {
+  articleUrl = "";
+
+  articleRead = false;
+
+  isSubmitting = false;
+
+  showOnlyBenMessage = false;
+
+  get urlInput(): HTMLInputElement {
+    return document.querySelector("#article-url") as HTMLInputElement;
+  }
+
+  get titleInput(): HTMLInputElement {
+    return document.querySelector("#article-title") as HTMLInputElement;
+  }
+
+  get hasBeenReadInput(): HTMLInputElement {
+    return document.querySelector("#has-been-read") as HTMLInputElement;
+  }
+
+  get submitButton(): HTMLButtonElement {
+    return document.querySelector("#add-article-submit-button") as HTMLButtonElement;
+  }
+
+  handleSubmit(e: Event): void {
+    e.preventDefault();
+    this.setIsSubmitting();
+    let stop = false;
+    stop = this.validateUrl();
+    if (stop) {
+      this.setIsNotSubmitting();
+      return;
+    }
+    if (!this.articleTitle) {
+      this.attemptArticleInformationScrape();
+      return;
+    }
+
+    stop = this.validateTitle();
+    if (stop) {
+      this.setIsNotSubmitting();
+      return;
+    }
+    this.setIsSubmitting();
+    const article = {
+      title: this.articleTitle,
+      url: this.articleUrl,
+      read: this.articleRead,
+      minuteRead: null,
+      tags: [],
+    };
+    bus.$emit("addArticleFormSubmitted", article);
+  }
+
+  attemptArticleInformationScrape(): void {
+    scraper.scrapeArticleInformation(this.articleUrl).then(scrapedArticleInfo => {
+      this.articleTitle = scrapedArticleInfo.articleTitle;
+      this.validateTitle();
+      if (!scrapedArticleInfo.articleTitle) {
         this.setIsNotSubmitting();
         return;
       }
-      this.setIsSubmitting();
       const article = {
         title: this.articleTitle,
         url: this.articleUrl,
         read: this.articleRead,
-        minuteRead: null,
-        tags: [],
+        minuteRead: scrapedArticleInfo.minuteRead,
+        tags: scrapedArticleInfo.tags,
       };
       bus.$emit("addArticleFormSubmitted", article);
-    },
-    attemptArticleInformationScrape() {
-      scraper.scrapeArticleInformation(this.articleUrl).then(scrapedArticleInfo => {
-        this.articleTitle = scrapedArticleInfo.articleTitle;
-        this.validateTitle();
-        if (!scrapedArticleInfo.articleTitle) {
-          this.setIsNotSubmitting();
-          return;
-        }
-        const article = {
-          title: this.articleTitle,
-          url: this.articleUrl,
-          read: this.articleRead,
-          minuteRead: scrapedArticleInfo.minuteRead,
-          tags: scrapedArticleInfo.tags,
-        };
-        bus.$emit("addArticleFormSubmitted", article);
-      });
-    },
-    validateUrl() {
-      const urlInput = document.querySelector("#article-url");
-      if (!this.articleUrl) {
-        urlInput.classList.add("red-border");
-        return true;
-      }
-      urlInput.classList.remove("red-border");
-      return false;
-    },
-    validateTitle() {
-      const titleInput = document.querySelector("#article-title");
-      if (!this.articleTitle) {
-        titleInput.classList.add("red-border");
-        return true;
-      }
-      titleInput.classList.remove("red-border");
-      return false;
-    },
-    setIsSubmitting() {
-      this.isSubmitting = true;
-      document.querySelector("#article-title").disabled = true;
-      document.querySelector("#article-url").disabled = true;
-      document.querySelector("#has-been-read").disabled = true;
-      document.querySelector("#add-article-submit-button").disabled = true;
-    },
-    setIsNotSubmitting() {
-      this.isSubmitting = false;
-      document.querySelector("#article-title").disabled = false;
-      document.querySelector("#article-url").disabled = false;
-      document.querySelector("#has-been-read").disabled = false;
-      document.querySelector("#add-article-submit-button").disabled = false;
-    },
-    resetForm() {
-      this.isSubmitting = false;
-      this.articleTitle = "";
-      this.articleUrl = "";
-      this.articleRead = false;
-      document.querySelector("#article-title").disabled = false;
-      document.querySelector("#article-url").disabled = false;
-      document.querySelector("#has-been-read").disabled = false;
-      document.querySelector("#add-article-submit-button").disabled = false;
-    },
-    setShowOnlyBenMessage(val) {
-      this.showOnlyBenMessage = val;
-    },
-    handleNotBenError() {
-      this.setShowOnlyBenMessage(true);
-      this.isSubmitting = false;
-      document.querySelector("#article-title").disabled = false;
-      document.querySelector("#article-url").disabled = false;
-      document.querySelector("#has-been-read").disabled = false;
-      document.querySelector("#add-article-submit-button").disabled = false;
-      setTimeout(() => this.setShowOnlyBenMessage(false), 5000);
-    },
-  },
-  mounted() {
+    });
+  }
+
+  validateUrl(): boolean {
+    if (!this.articleUrl) {
+      this.urlInput.classList.add("red-border");
+      return true;
+    }
+    this.urlInput.classList.remove("red-border");
+    return false;
+  }
+
+  validateTitle(): boolean {
+    if (!this.articleTitle) {
+      this.titleInput.classList.add("red-border");
+      return true;
+    }
+    this.titleInput.classList.remove("red-border");
+    return false;
+  }
+
+  setIsSubmitting(): void {
+    this.isSubmitting = true;
+    this.titleInput.disabled = true;
+    this.urlInput.disabled = true;
+    this.hasBeenReadInput.disabled = true;
+    this.submitButton.disabled = true;
+  }
+
+  setIsNotSubmitting(): void {
+    this.isSubmitting = false;
+    this.titleInput.disabled = false;
+    this.urlInput.disabled = false;
+    this.hasBeenReadInput.disabled = false;
+    this.submitButton.disabled = false;
+  }
+
+  resetForm(): void {
+    this.isSubmitting = false;
+    this.articleTitle = "";
+    this.articleUrl = "";
+    this.articleRead = false;
+    this.titleInput.disabled = false;
+    this.urlInput.disabled = false;
+    this.hasBeenReadInput.disabled = false;
+    this.submitButton.disabled = false;
+  }
+
+  setShowOnlyBenMessage(val: boolean): void {
+    this.showOnlyBenMessage = val;
+  }
+
+  handleNotBenError(): void {
+    this.setShowOnlyBenMessage(true);
+    this.isSubmitting = false;
+    this.titleInput.disabled = false;
+    this.urlInput.disabled = false;
+    this.hasBeenReadInput.disabled = false;
+    this.submitButton.disabled = false;
+    setTimeout(() => this.setShowOnlyBenMessage(false), 5000);
+  }
+
+  mounted(): void {
     bus.$on("clearArticleForm", this.resetForm);
     bus.$on("addNewArticleError", this.handleNotBenError);
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

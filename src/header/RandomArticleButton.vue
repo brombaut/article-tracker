@@ -7,24 +7,29 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
+import Article from "../table/article";
 
-export default {
-  name: "RandomArticleButton",
-  methods: {
-    handleRandomArticleClicked() {
-      bus.$emit("randomUnreadArticleRequest");
-    },
-    openRandomArticle(unreadArticleRecord) {
-      window.open(unreadArticleRecord.url, "_blank").focus();
-      bus.$emit("articleClicked", unreadArticleRecord);
-    },
-  },
-  mounted() {
+@Component
+export default class RandomArticleButton extends Vue {
+  handleRandomArticleClicked(): void {
+    bus.$emit("randomUnreadArticleRequest");
+  }
+
+  openRandomArticle(unreadArticleRecord: Article): void {
+    const result = window.open(unreadArticleRecord.url, "_blank")
+    if (result) {
+      result.focus();
+    }
+    bus.$emit("articleClicked", unreadArticleRecord);
+  }
+
+  mounted(): void {
     bus.$on("randomUnreadArticleEmit", this.openRandomArticle);
-  },
-};
+  }
+}
 </script>
 
 <style lang='scss'>

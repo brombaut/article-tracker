@@ -8,20 +8,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
 import MainHeader from "./header/MainHeader.vue";
 import ServerCommunication from "./server/ServerCommunication.vue";
 import ArticlesContainer from "./table/ArticlesContainer.vue";
 
-
-export default {
-  name: "App",
+@Component({
   components: {
     MainHeader,
     ServerCommunication,
     ArticlesContainer,
   },
-};
+})
+export default class App extends Vue {}
 </script>
 
 <style lang='scss'>
