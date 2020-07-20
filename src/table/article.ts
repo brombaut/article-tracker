@@ -50,6 +50,10 @@ export default class Article {
     return this._minuteRead;
   }
 
+  get tags(): Tag[] {
+    return this._tags;
+  }
+
   compareTo(a: Article, field: string, type: string): number {
     switch (field) {
       case "created":

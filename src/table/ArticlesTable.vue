@@ -19,8 +19,8 @@
     </thead>
     <tbody>
       <tr v-for="row in rows" :key="row.url" @click="handleRowClick(row)">
-        <td :class="columns[0].classList">{{ formatEpochAsDate(row.createdAt.seconds)}}</td>
-        <td :class="columns[1].classList">{{ formatEpochAsDate(row.lastClicked.seconds)}}</td>
+        <td :class="columns[0].classList">{{ formatEpochAsDate(row.createdAt)}}</td>
+        <td :class="columns[1].classList">{{ formatEpochAsDate(row.lastClicked)}}</td>
         <td :class="columns[2].classList">
           <b>{{ row.title }}</b>
         </td>
