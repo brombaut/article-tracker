@@ -1,3 +1,4 @@
+
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
@@ -7,7 +8,6 @@ import Article from "../table/article";
 import User from "./user";
 import FirebaseDate from "../table/firebaseDate";
 import Tag from "../table/tag";
-
 
 firebase.auth().onAuthStateChanged(user => {
   if (user) {
@@ -36,29 +36,37 @@ export default class ServerCommunication extends Vue {
   }
 
   postNewArticleRecord(article: Article): void {
-    firebase.firestore().collection("articles").add({
-      ...article,
-      createdAt: new Date(),
-      lastClicked: new Date(),
-    })
-      .then((docRef) => {
-        articlesCollection.doc(docRef.id).get().then(newArticle => {
-          const articleData: ArticleDTO = { ...newArticle.data() } as ArticleDTO;
-          const aArticle: Article = new Article(
-            articleData.createdAt,
-            articleData.lastClicked,
-            articleData.title,
-            articleData.minuteRead,
-            articleData.tags,
-            articleData.url,
-            articleData.read,
-          );
-          this.articles.push(aArticle);
-          bus.$emit("allArticlesFromServer", this.articles);
-        });
+    firebase
+      .firestore()
+      .collection("articles")
+      .add({
+        ...article,
+        createdAt: new Date(),
+        lastClicked: new Date(),
+      })
+      .then(docRef => {
+        articlesCollection
+          .doc(docRef.id)
+          .get()
+          .then(newArticle => {
+            const articleData: ArticleDTO = {
+              ...newArticle.data(),
+            } as ArticleDTO;
+            const aArticle: Article = new Article(
+              articleData.createdAt,
+              articleData.lastClicked,
+              articleData.title,
+              articleData.minuteRead,
+              articleData.tags,
+              articleData.url,
+              articleData.read,
+            );
+            this.articles.push(aArticle);
+            bus.$emit("allArticlesFromServer", this.articles);
+          });
         bus.$emit("clearArticleForm");
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error adding article: ", error);
         bus.$emit("addNewArticleError");
       });
@@ -75,27 +83,37 @@ export default class ServerCommunication extends Vue {
         if (!firebase.auth().currentUser) {
           return;
         }
-        querySnapshot.forEach((doc) => {
-          doc.ref.update({
-            read: true,
-            lastClicked: new Date(),
-          }).then(() => {
-            this.loadAllArticleRecordsFromServer();
-          }).catch((error) => {
-            console.error("Error updating record. Are you sure you created the record?");
-          });
+        querySnapshot.forEach(doc => {
+          doc.ref
+            .update({
+              read: true,
+              lastClicked: new Date(),
+            })
+            .then(() => {
+              this.loadAllArticleRecordsFromServer();
+            })
+            .catch(error => {
+              console.error(
+                "Error updating record. Are you sure you created the record?",
+              );
+            });
         });
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Could not find record");
       });
   }
 
   loadAllArticleRecordsFromServer(): void {
     articlesCollection.get().then(response => {
-      this.articles = response.docs.map(doc => doc.data()) as Article[];
+      const articleDtos: ArticleDTO[] = response.docs.map(doc => doc.data()) as ArticleDTO[];
+      this.articles = articleDtos.map(this.buildArticleFromDto);
       bus.$emit("allArticlesFromServer", this.articles);
     });
+  }
+
+  buildArticleFromDto(adto: ArticleDTO): Article {
+    return new Article(adto.createdAt, adto.lastClicked, adto.title, adto.minuteRead, adto.tags, adto.url, adto.read);
   }
 
   handleAttemptUserSignIn(user: User): void {
@@ -133,6 +151,10 @@ export default class ServerCommunication extends Vue {
     bus.$on("forceArticleReload", this.loadAllArticleRecordsFromServer);
     bus.$on("randomUnreadArticleRequest", this.handleRandomUnreadArticleRequest);
     this.loadAllArticleRecordsFromServer();
+  }
+
+  render(): null {
+    return null;
   }
 }
 </script>

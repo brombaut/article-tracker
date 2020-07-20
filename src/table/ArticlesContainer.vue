@@ -156,7 +156,9 @@ export default class ArticlesContainer extends Vue {
 
   filterArray(array: Article[]): Article[] {
     if (this.filters.created) {
-      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt).includes(this.filters.created.toString()));
+      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt).includes(
+        this.filters.created.toString(),
+      ));
     }
     if (this.filters.lastClicked) {
       array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.lastClicked).includes(
@@ -185,13 +187,6 @@ export default class ArticlesContainer extends Vue {
   sortArray(array: Article[]): Article[] {
     let endElementsArray: Article[] = [];
     let arrayToSort = [...array];
-    // const sortFunction = this.sortByGeneralComparison;
-    // if (this.sort.attribute === "created") {
-    //   sortFunction = this.sortBySecondsAttribute("createdAt");
-    // }
-    // if (this.sort.attribute === "lastClicked") {
-    //   sortFunction = this.sortBySecondsAttribute("lastClicked");
-    // }
     if (this.sort.attribute === "minuteRead") {
       arrayToSort = array.filter(a => a.minuteRead);
       endElementsArray = array.filter(a => !a.minuteRead);
