@@ -126,11 +126,12 @@ export default class ArticlesTable extends Vue {
 
   filterRead = "unread";
 
-  readFilter: FilterHandler = new FilterHandler("text", "", this.filterReadHandler);
+  readFilter: FilterHandler = new FilterHandler("select", this.filterRead, this.filterReadHandler);
 
   readColumn: Column = new Column("Read", "read", this.readFilter, { "hide-tiny-screen": true });
 
   filterReadHandler(newVal: string): void {
+    this.filterRead = newVal;
     this.filterUpdated("read", newVal);
   }
 

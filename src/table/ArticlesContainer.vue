@@ -177,7 +177,7 @@ export default class ArticlesContainer extends Vue {
         .toLowerCase()
         .includes(this.filters.url.toString().toLowerCase()));
     }
-    if (this.filters.read) {
+    if (this.filters.read && this.filters.read !== "all") {
       const readShouldBe = this.filters.read === "read";
       array = array.filter(record => record.read === readShouldBe);
     }

@@ -11,9 +11,9 @@
       id="filter-read"
       @input="(e) => column.filter.onchange(e.target.value)"
     >
-      <option value>All</option>
-      <option value="read">Read</option>
-      <option value="unread">Unread</option>
+      <option value="all" :selected="column.filter.placeholder === ''">All</option>
+      <option value="read" :selected="column.filter.placeholder == 'read'">Read</option>
+      <option value="unread" :selected="column.filter.placeholder == 'unread'">Unread</option>
     </select>
   </th>
 </template>
