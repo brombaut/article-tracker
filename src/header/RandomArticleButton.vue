@@ -10,7 +10,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { bus } from "@/main";
-import Article from "../table/article";
+import Article from "../types/article";
 
 @Component
 export default class RandomArticleButton extends Vue {
@@ -19,7 +19,7 @@ export default class RandomArticleButton extends Vue {
   }
 
   openRandomArticle(unreadArticleRecord: Article): void {
-    const result = window.open(unreadArticleRecord.url, "_blank")
+    const result = window.open(unreadArticleRecord.url, "_blank");
     if (result) {
       result.focus();
     }
@@ -32,7 +32,7 @@ export default class RandomArticleButton extends Vue {
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 #random-article-button {
   border-left: 1px solid $secondary;
 

@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import ProgressGauge from "./ProgressGauge.vue";
-import Article from "../table/article";
+import Article from "../types/article";
 import GaugeData from "./GaugeData";
 
 @Component({

@@ -13,33 +13,14 @@
       <div class="page-numbers-container">
         <span class="page-sub-numbers-container">
           <span v-if="pagination.pageNumber > 2" class="page-sub-ellipse">...</span>
-          <span
-            v-if="pagination.pageNumber > 1"
-            class="page-sub-number"
-            @click="setPagination(pagination.pageNumber - 2)"
-          >{{ pagination.pageNumber - 2 }}</span>
-          <span
-            v-if="pagination.pageNumber > 0"
-            class="page-sub-number"
-            @click="setPagination(pagination.pageNumber - 1)"
-          >{{ pagination.pageNumber - 1 }}</span>
+          <span v-if="pagination.pageNumber > 1" class="page-sub-number" @click="setPagination(pagination.pageNumber - 2)">{{ pagination.pageNumber - 2 }}</span>
+          <span v-if="pagination.pageNumber > 0" class="page-sub-number" @click="setPagination(pagination.pageNumber - 1)">{{ pagination.pageNumber - 1 }}</span>
         </span>
-        <span class="page-main-number">{{ pagination.pageNumber}}</span>
+        <span class="page-main-number">{{ pagination.pageNumber }}</span>
         <span class="page-sub-numbers-container">
-          <span
-            v-if="pagination.pageNumber < numberOfPaginationPages"
-            class="page-sub-number"
-            @click="setPagination(pagination.pageNumber + 1)"
-          >{{ pagination.pageNumber + 1 }}</span>
-          <span
-            v-if="pagination.pageNumber < numberOfPaginationPages - 1"
-            class="page-sub-number"
-            @click="setPagination(pagination.pageNumber + 2)"
-          >{{ pagination.pageNumber + 2 }}</span>
-          <span
-            v-if="pagination.pageNumber < numberOfPaginationPages - 2"
-            class="page-sub-ellipse"
-          >...</span>
+          <span v-if="pagination.pageNumber < numberOfPaginationPages" class="page-sub-number" @click="setPagination(pagination.pageNumber + 1)">{{ pagination.pageNumber + 1 }}</span>
+          <span v-if="pagination.pageNumber < numberOfPaginationPages - 1" class="page-sub-number" @click="setPagination(pagination.pageNumber + 2)">{{ pagination.pageNumber + 2 }}</span>
+          <span v-if="pagination.pageNumber < numberOfPaginationPages - 2" class="page-sub-ellipse">...</span>
         </span>
       </div>
       <div class="pagination-control" @click="incrementPagination()">
@@ -59,7 +40,7 @@ import { bus } from "@/main";
 import ArticlesTable from "./ArticlesTable.vue";
 import StatisticsContainer from "../statistics/StatisticsContainer.vue";
 import SortType from "./sortType";
-import Article from "./article";
+import Article from "../types/article";
 import Filter from "./filter";
 
 @Component({
@@ -137,45 +118,32 @@ export default class ArticlesContainer extends Vue {
     }
     const date = new Date(0);
     date.setUTCSeconds(second);
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "May",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     return `${months[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
   }
 
   filterArray(array: Article[]): Article[] {
     if (this.filters.created) {
-      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt).includes(
-        this.filters.created.toString(),
-      ));
+      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.createdAt).includes(this.filters.created.toString()));
     }
     if (this.filters.lastClicked) {
-      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.lastClicked).includes(
-        this.filters.lastClicked.toString(),
-      ));
+      array = array.filter(record => this.convertSecondsEpochToDateFormatted(record.lastClicked).includes(this.filters.lastClicked.toString()));
     }
     if (this.filters.title) {
-      array = array.filter(record => record.title
-        .toString()
-        .toLowerCase()
-        .includes(this.filters.title.toString().toLowerCase()));
+      array = array.filter(record => {
+        return record.title
+          .toString()
+          .toLowerCase()
+          .includes(this.filters.title.toString().toLowerCase());
+      });
     }
     if (this.filters.url) {
-      array = array.filter(record => record.url
-        .toString()
-        .toLowerCase()
-        .includes(this.filters.url.toString().toLowerCase()));
+      array = array.filter(record => {
+        return record.url
+          .toString()
+          .toLowerCase()
+          .includes(this.filters.url.toString().toLowerCase());
+      });
     }
     if (this.filters.read && this.filters.read !== "all") {
       const readShouldBe = this.filters.read === "read";
@@ -237,12 +205,12 @@ export default class ArticlesContainer extends Vue {
     bus.$on("allArticlesFromServer", this.handleAllArticlesFromServer);
     bus.$on("filterUpdated", this.handleFilterUpdated);
     bus.$on("sortUpdated", this.handleSortUpdated);
-    bus.$emit("forceArticleReload");
+    // bus.$emit("forceArticleReload");
   }
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 #articles-container {
   max-width: 100%;
   margin-top: 80px;

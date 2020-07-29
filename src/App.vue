@@ -3,7 +3,6 @@
     <span id="desktop-wrapper">
       <MainHeader />
       <ArticlesContainer />
-      <ServerCommunication />
     </span>
   </div>
 </template>
@@ -11,20 +10,22 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import MainHeader from "./header/MainHeader.vue";
-import ServerCommunication from "./server/ServerCommunication.vue";
 import ArticlesContainer from "./table/ArticlesContainer.vue";
+import Server from "./server/server";
+import FirebaseServer from "./server/firebaseServer";
 
 @Component({
   components: {
     MainHeader,
-    ServerCommunication,
     ArticlesContainer,
   },
 })
-export default class App extends Vue {}
+export default class App extends Vue {
+  private _server: Server = new FirebaseServer();
+}
 </script>
 
-<style lang='scss'>
+<style lang="scss">
 html,
 body {
   background-color: $secondary;
