@@ -15,18 +15,18 @@ export default class FirebaseProxy {
     });
   }
 
-  async add(article: Article): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>> {
+  add(article: Article): Promise<firebase.firestore.DocumentReference<firebase.firestore.DocumentData>> {
     return firebase
       .firestore()
       .collection("articles")
       .add({ ...article, createdAt: new Date(), lastClicked: new Date() });
   }
 
-  async signIn(user: User): Promise<void> {
-    await firebase.auth().signInWithEmailAndPassword(user.email, user.password);
+  signIn(user: User): Promise<firebase.auth.UserCredential> {
+    return firebase.auth().signInWithEmailAndPassword(user.email, user.password);
   }
 
-  async signOut(): Promise<void> {
-    await firebase.auth().signOut();
+  signOut(): Promise<void> {
+    return firebase.auth().signOut();
   }
 }

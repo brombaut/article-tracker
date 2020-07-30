@@ -8,13 +8,17 @@ export default abstract class Server {
 
   constructor() {
     this._articles = [];
-    bus.$on("addArticleFormSubmitted", this.post);
-    bus.$on("articleClicked", this.articleOpened);
-    bus.$on("attemptUserSignIn", this.signIn);
-    bus.$on("attemptUserSignOut", this.signOut);
-    bus.$on("forceArticleReload", this.loadAllArticles);
-    bus.$on("randomUnreadArticleRequest", this.randomArticle);
+    this.setListeners();
     this.loadAllArticles();
+  }
+
+  setListeners(): void {
+    bus.$on("addArticleFormSubmitted", (article: Article) => this.post(article));
+    bus.$on("articleClicked", (article: Article) => this.articleOpened(article));
+    bus.$on("attemptUserSignIn", (user: User) => this.signIn(user));
+    bus.$on("attemptUserSignOut", () => this.signOut());
+    bus.$on("forceArticleReload", () => this.loadAllArticles());
+    bus.$on("randomUnreadArticleRequest", () => this.randomArticle());
   }
 
   getAll(): void {
