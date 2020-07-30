@@ -92,14 +92,4 @@ export default class FirebaseServer extends Server {
       bus.$emit("signOutSuccess");
     });
   }
-
-  randomArticle(): void {
-    const unreadArticles = this._articles.filter(article => !article.read);
-    const randomIndex = Math.floor(Math.random() * unreadArticles.length);
-    bus.$emit("randomUnreadArticleEmit", unreadArticles[randomIndex]);
-  }
-
-  private buildArticleFromDto(adto: ArticleDTO): Article {
-    return new Article(adto.createdAt, adto.lastClicked, adto.title, adto.minuteRead, adto.tags, adto.url, adto.read);
-  }
 }

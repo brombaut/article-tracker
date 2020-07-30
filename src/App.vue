@@ -13,6 +13,7 @@ import MainHeader from "./header/MainHeader.vue";
 import ArticlesContainer from "./table/ArticlesContainer.vue";
 import Server from "./server/server";
 import FirebaseServer from "./server/firebaseServer";
+import LocalServer from "./server/localServer";
 
 @Component({
   components: {
@@ -21,7 +22,15 @@ import FirebaseServer from "./server/firebaseServer";
   },
 })
 export default class App extends Vue {
-  private _server: Server = new FirebaseServer();
+  private _server!: Server;
+
+  mounted(): void {
+    if (process.env.VUE_APP_ENV === "develop") {
+      this._server = new LocalServer();
+    } else {
+      this._server = new FirebaseServer();
+    }
+  }
 }
 </script>
 

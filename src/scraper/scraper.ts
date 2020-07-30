@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// TODO: Make this a class
 // const cheerio = require("cheerio");
 import * as cheerio from "cheerio";
 
@@ -37,7 +38,10 @@ function selectMainTitleNode($: CheerioStatic): Cheerio {
 function scrapeArticleTItle($: CheerioStatic, mainTitleNode: Cheerio): string {
   let articleTitle = null;
   try {
-    articleTitle = $(mainTitleNode).find("h1").text().trim();
+    articleTitle = $(mainTitleNode)
+      .find("h1")
+      .text()
+      .trim();
   } catch {
     console.error("Could not parse article title string");
   }
@@ -47,7 +51,9 @@ function scrapeArticleTItle($: CheerioStatic, mainTitleNode: Cheerio): string {
 function scrapeMinuteRead($: CheerioStatic, mainTitleNode: Cheerio): number {
   let minuteRead = 0;
   try {
-    const timeSiblings: Cheerio = $(mainTitleNode).find("time").siblings();
+    const timeSiblings: Cheerio = $(mainTitleNode)
+      .find("time")
+      .siblings();
     timeSiblings.each((i, node) => {
       const nodeText: string = $(node).text();
       if (nodeText.includes("min read")) {
@@ -63,7 +69,9 @@ function scrapeMinuteRead($: CheerioStatic, mainTitleNode: Cheerio): number {
 function scrapeTags($: CheerioStatic, mainTitleNode: Cheerio): Tag[] {
   const tags: Tag[] = [];
   try {
-    const tagNodes: Cheerio = $(mainTitleNode).find(".spec__tags").find("a");
+    const tagNodes: Cheerio = $(mainTitleNode)
+      .find(".spec__tags")
+      .find("a");
     tagNodes.each((i, node: CheerioElement) => {
       const name: string = $(node).text();
       const href = `${devToBaseUrl}${$(node).attr("href")}`;
