@@ -29,15 +29,15 @@ export default abstract class Server {
     return new Article(adto.createdAt, adto.lastClicked, adto.title, adto.minuteRead, adto.tags, adto.url, adto.read);
   }
 
-  abstract loadAllArticles(): void;
+  abstract async loadAllArticles(): Promise<void>;
 
-  abstract post(article: Article): void;
+  abstract async post(article: Article): Promise<void>;
 
-  abstract articleOpened(article: Article): void;
+  abstract async articleOpened(article: Article): Promise<void>;
 
-  abstract signIn(user: User): void;
+  abstract async signIn(user: User): Promise<void>;
 
-  abstract signOut(): void;
+  abstract async signOut(): Promise<void>;
 
   randomArticle(): void {
     const unreadArticles = this._articles.filter(article => !article.read);

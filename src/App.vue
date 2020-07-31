@@ -26,8 +26,8 @@ export default class App extends Vue {
 
   mounted(): void {
     if (process.env.VUE_APP_ENV === "develop") {
-      this._server = new LocalServer();
-      // this._server = new FirebaseServer();
+      // this._server = new LocalServer();
+      this._server = new FirebaseServer();
     } else {
       this._server = new FirebaseServer();
     }

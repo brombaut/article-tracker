@@ -15,81 +15,50 @@ export default class FirebaseServer extends Server {
     this._firebaseProxy = new FirebaseProxy();
   }
 
-  loadAllArticles(): void {
-    articlesCollection.get().then(response => {
-      const articleDtos: ArticleDTO[] = response.docs.map(doc => doc.data()) as ArticleDTO[];
-      this._articles = articleDtos.map(this.buildArticleFromDto);
-      bus.$emit("allArticlesFromServer", this._articles);
-    });
+  async loadAllArticles(): Promise<void> {
+    const response = await articlesCollection.get();
+    const articleDtos: ArticleDTO[] = response.docs.map(doc => doc.data()) as ArticleDTO[];
+    this._articles = articleDtos.map(this.buildArticleFromDto);
+    bus.$emit("allArticlesFromServer", this._articles);
   }
 
-  post(article: Article): void {
-    this._firebaseProxy
-      .add(article)
-      .then(docRef => {
-        articlesCollection
-          .doc(docRef.id)
-          .get()
-          .then(newArticle => {
-            const articleData: ArticleDTO = {
-              ...newArticle.data(),
-            } as ArticleDTO;
-            const aArticle: Article = this.buildArticleFromDto(articleData);
-            this._articles.push(aArticle);
-            bus.$emit("allArticlesFromServer", this._articles);
-          });
-        bus.$emit("clearArticleForm");
-      })
-      .catch(error => {
-        console.error("Error adding article: ", error);
-        bus.$emit("addNewArticleError");
-      });
+  async post(article: Article): Promise<void> {
+    const docRef = await this._firebaseProxy.add(article);
+    const newArticle = await articlesCollection.doc(docRef.id).get();
+    const articleData: ArticleDTO = {
+      ...newArticle.data(),
+    } as ArticleDTO;
+    const aArticle: Article = this.buildArticleFromDto(articleData);
+    this._articles.push(aArticle);
+    bus.$emit("allArticlesFromServer", this._articles);
+    bus.$emit("clearArticleForm");
   }
 
-  articleOpened(article: Article): void {
+  async articleOpened(article: Article): Promise<void> {
     if (process.env.VUE_APP_ENV === "develop") {
       return;
     }
-    articlesCollection
-      .where("url", "==", article.url)
-      .get()
-      .then(querySnapshot => {
-        if (!firebase.auth().currentUser) {
-          return;
-        }
-        querySnapshot.forEach(doc => {
-          doc.ref
-            .update({
-              read: true,
-              lastClicked: new Date(),
-            })
-            .then(() => {
-              this.loadAllArticles();
-            })
-            .catch(error => {
-              console.error("Error updating record. Are you sure you created the record?");
-            });
-        });
-      })
-      .catch(error => {
-        console.error("Could not find record");
-      });
-  }
-
-  signIn(user: User): void {
-    this._firebaseProxy
-      .signIn(user)
-      .then(() => {
-        bus.$emit("signInSuccess");
-      })
-      .catch(() => {
-        bus.$emit("signInError");
-      });
-  }
-
-  signOut(): void {
-    this._firebaseProxy.signOut().then(() => {
-      bus.$emit("signOutSuccess");
+    if (!firebase.auth().currentUser) {
+      return;
+    }
+    const querySnapshot = await articlesCollection.where("url", "==", article.url).get();
+    querySnapshot.forEach(async doc => {
+      await doc.ref.update({ read: true, lastClicked: new Date() });
+      this.loadAllArticles();
     });
+  }
+
+  async signIn(user: User): Promise<void> {
+    try {
+      await this._firebaseProxy.signIn(user);
+      bus.$emit("signInSuccess");
+    } catch {
+      bus.$emit("signInError");
+    }
+  }
+
+  async signOut(): Promise<void> {
+    await this._firebaseProxy.signOut();
+    bus.$emit("signOutSuccess");
   }
 }

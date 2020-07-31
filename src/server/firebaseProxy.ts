@@ -1,7 +1,6 @@
 import firebase from "firebase";
 import { bus } from "@/main";
 import Article from "@/types/article";
-import { articlesCollection } from "./firebase";
 import User from "./user";
 
 export default class FirebaseProxy {
