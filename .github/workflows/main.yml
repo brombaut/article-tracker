@@ -1,15 +1,22 @@
-- name: Github Action Merge Dependabot
-  # You may pin to the exact commit or the version.
-  # uses: fastify/github-action-merge-dependabot@afbe82ba990ac7da327bdc087b27ad62023100dc
-  uses: fastify/github-action-merge-dependabot@v1.2.1
-  with:
-    # A GitHub token
-    github-token: 
-    # Packages that you want to manually review before upgrading
-    exclude: # optional
-    # If true, the PR is only approved but not merged
-    approve-only: # optional
-    # The merge method you would like to use (squash, merge, rebase)
-    merge-method: # optional, default is squash
-    # An arbitrary message that you'd like to comment on the PR after it gets auto-merged
-    merge-comment: # optional, default is 
+name: article-tracker
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - run: npm ci
+      - run: npm run build
+  automerge:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fastify/github-action-merge-dependabot@v1
+        if: ${{ github.actor == 'dependabot[bot]' && github.event_name == 'pull_request' }}
+        with:
+          github-token: ${{secrets.github_token}}
